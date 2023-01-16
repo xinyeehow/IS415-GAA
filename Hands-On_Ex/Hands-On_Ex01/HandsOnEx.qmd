@@ -1,0 +1,10 @@
+---
+title: "Hands On Exercise 01"
+date: "`r Sys.Date()`"
+format: html
+editor: visual
+---
+
+## Installing packages
+Do this
+<!--comment like this-->

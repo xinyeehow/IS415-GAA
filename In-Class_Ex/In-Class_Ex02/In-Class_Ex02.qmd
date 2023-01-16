@@ -1,0 +1,26 @@
+---
+title: "In-Class Exercise"
+date: "`r Sys.Date()`"
+format: html
+editor: visual
+---
+
+## Installing funModeling package
+
+```{r}
+pacman::p_load(sf, tidyverse, funModeling)
+```
+
+## Importing geoBoundaries dataset
+
+```{r}
+geoNGA <- st_read("geospatial/geoBoundaries/", 
+                layer = "geoBoundaries-NGA-ADM2") %>% st_transform(crs_26392)
+```
+
+## Importing NGA dataset
+
+```{r}
+NGA <- st_read("geospatial/", 
+                layer = "nga_admbnda_adm2_osgof_20190417") %>% st_transform(crs_26392)
+```

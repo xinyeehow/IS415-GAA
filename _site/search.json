@@ -16,8 +16,22 @@
   {
     "objectID": "HandsOnEx.html",
     "href": "HandsOnEx.html",
+    "title": "Hands On Exercise 01",
+    "section": "",
+    "text": "Do this"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex01/In-Class_Ex01.html",
+    "href": "In-Class_Ex/In-Class_Ex01/In-Class_Ex01.html",
     "title": "IS415-GAA",
     "section": "",
-    "text": "---\ntitle: “Hands On Exercise”\n---\nWeek 2:\n<!--comment–>hello"
+    "text": "Hello there"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex02/In-Class_Ex02.html",
+    "href": "In-Class_Ex/In-Class_Ex02/In-Class_Ex02.html",
+    "title": "In-Class Exercise",
+    "section": "",
+    "text": "##Installing funModeling package\n\npacman::p_load(sf, tidyverse, funModeling)\n\nInstalling package into 'C:/Users/howxi/AppData/Local/R/win-library/4.2'\n(as 'lib' is unspecified)\n\n\nalso installing the dependencies 'deldir', 'RcppEigen', 'bitops', 'jpeg', 'interp', 'checkmate', 'gtools', 'caTools', 'Formula', 'latticeExtra', 'htmlTable', 'gplots', 'plyr', 'Hmisc', 'ROCR', 'pander', 'reshape2', 'moments', 'entropy'\n\n\nWarning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2:\n  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2/PACKAGES'\n\n\npackage 'deldir' successfully unpacked and MD5 sums checked\npackage 'RcppEigen' successfully unpacked and MD5 sums checked\npackage 'bitops' successfully unpacked and MD5 sums checked\npackage 'jpeg' successfully unpacked and MD5 sums checked\npackage 'interp' successfully unpacked and MD5 sums checked\npackage 'checkmate' successfully unpacked and MD5 sums checked\npackage 'gtools' successfully unpacked and MD5 sums checked\npackage 'caTools' successfully unpacked and MD5 sums checked\npackage 'Formula' successfully unpacked and MD5 sums checked\npackage 'latticeExtra' successfully unpacked and MD5 sums checked\npackage 'htmlTable' successfully unpacked and MD5 sums checked\npackage 'gplots' successfully unpacked and MD5 sums checked\npackage 'plyr' successfully unpacked and MD5 sums checked\npackage 'Hmisc' successfully unpacked and MD5 sums checked\npackage 'ROCR' successfully unpacked and MD5 sums checked\npackage 'pander' successfully unpacked and MD5 sums checked\npackage 'reshape2' successfully unpacked and MD5 sums checked\npackage 'moments' successfully unpacked and MD5 sums checked\npackage 'entropy' successfully unpacked and MD5 sums checked\npackage 'funModeling' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n    C:\\Users\\howxi\\AppData\\Local\\Temp\\RtmpC2IPM8\\downloaded_packages\n\n\n\nfunModeling installed\n\n\nWarning in pacman::p_load(sf, tidyverse, funModeling): Failed to install/load:\nfunModeling\n\n\n##Importing geoBoundaries dataset"
   }
 ]
