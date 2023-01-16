@@ -15,12 +15,12 @@ pacman::p_load(sf, tidyverse, funModeling)
 
 ```{r}
 geoNGA <- st_read("geospatial/geoBoundaries/", 
-                layer = "geoBoundaries-NGA-ADM2") %>% st_transform(crs_26392)
+                layer = "geoBoundaries-NGA-ADM2") %>% st_transform(crs=26392)
 ```
 
 ## Importing NGA dataset
 
 ```{r}
 NGA <- st_read("geospatial/", 
-                layer = "nga_admbnda_adm2_osgof_20190417") %>% st_transform(crs_26392)
+                layer = "nga_admbnda_adm2_osgof_20190417") %>% st_transform(crs=26392)
 ```

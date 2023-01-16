@@ -219,7 +219,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#installing-funmodeling-package" id="toc-installing-funmodeling-package" class="nav-link active" data-scroll-target="#installing-funmodeling-package">Installing funModeling package</a></li>
+  <li><a href="#importing-geoboundaries-dataset" id="toc-importing-geoboundaries-dataset" class="nav-link" data-scroll-target="#importing-geoboundaries-dataset">Importing geoBoundaries dataset</a></li>
+  <li><a href="#importing-nga-dataset" id="toc-importing-nga-dataset" class="nav-link" data-scroll-target="#importing-nga-dataset">Importing NGA dataset</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -247,7 +255,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>##Installing funModeling package</p>
+<section id="installing-funmodeling-package" class="level2">
+<h2 class="anchored" data-anchor-id="installing-funmodeling-package">Installing funModeling package</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tidyverse, funModeling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -255,36 +264,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 (as 'lib' is unspecified)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>also installing the dependencies 'deldir', 'RcppEigen', 'bitops', 'jpeg', 'interp', 'checkmate', 'gtools', 'caTools', 'Formula', 'latticeExtra', 'htmlTable', 'gplots', 'plyr', 'Hmisc', 'ROCR', 'pander', 'reshape2', 'moments', 'entropy'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
 <pre><code>Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2:
   cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.2/PACKAGES'</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>package 'deldir' successfully unpacked and MD5 sums checked
-package 'RcppEigen' successfully unpacked and MD5 sums checked
-package 'bitops' successfully unpacked and MD5 sums checked
-package 'jpeg' successfully unpacked and MD5 sums checked
-package 'interp' successfully unpacked and MD5 sums checked
-package 'checkmate' successfully unpacked and MD5 sums checked
-package 'gtools' successfully unpacked and MD5 sums checked
-package 'caTools' successfully unpacked and MD5 sums checked
-package 'Formula' successfully unpacked and MD5 sums checked
-package 'latticeExtra' successfully unpacked and MD5 sums checked
-package 'htmlTable' successfully unpacked and MD5 sums checked
-package 'gplots' successfully unpacked and MD5 sums checked
-package 'plyr' successfully unpacked and MD5 sums checked
-package 'Hmisc' successfully unpacked and MD5 sums checked
-package 'ROCR' successfully unpacked and MD5 sums checked
-package 'pander' successfully unpacked and MD5 sums checked
-package 'reshape2' successfully unpacked and MD5 sums checked
-package 'moments' successfully unpacked and MD5 sums checked
-package 'entropy' successfully unpacked and MD5 sums checked
-package 'funModeling' successfully unpacked and MD5 sums checked
+<pre><code>package 'funModeling' successfully unpacked and MD5 sums checked
 
 The downloaded binary packages are in
-    C:\Users\howxi\AppData\Local\Temp\RtmpC2IPM8\downloaded_packages</code></pre>
+    C:\Users\howxi\AppData\Local\Temp\RtmpIJK8Au\downloaded_packages</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
@@ -295,9 +282,43 @@ funModeling installed</code></pre>
 funModeling</code></pre>
 </div>
 </div>
-<p>##Importing geoBoundaries dataset</p>
+</section>
+<section id="importing-geoboundaries-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="importing-geoboundaries-dataset">Importing geoBoundaries dataset</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>geoNGA <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"geospatial/geoBoundaries/"</span>, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"geoBoundaries-NGA-ADM2"</span>) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="at">crs=</span><span class="dv">26392</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `geoBoundaries-NGA-ADM2' from data source 
+  `C:\xinyeehow\IS415-GAA\In-Class_Ex\In-Class_Ex02\geospatial\geoBoundaries' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 774 features and 6 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+</section>
+<section id="importing-nga-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="importing-nga-dataset">Importing NGA dataset</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>NGA <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"geospatial/"</span>, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"nga_admbnda_adm2_osgof_20190417"</span>) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="at">crs=</span><span class="dv">26392</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `nga_admbnda_adm2_osgof_20190417' from data source 
+  `C:\xinyeehow\IS415-GAA\In-Class_Ex\In-Class_Ex02\geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 774 features and 16 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
