@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "IS415-GAA",
+    "title": "IS415-Geospatial Analytics and Applications",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
   },
@@ -11,6 +11,13 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "About me\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "HandsOnEx.html",
+    "href": "HandsOnEx.html",
+    "title": "IS415-GAA",
+    "section": "",
+    "text": "---\ntitle: “Hands On Exercise”\n---\nWeek 2:\n<!--comment–>hello"
   }
 ]
