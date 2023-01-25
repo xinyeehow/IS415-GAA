@@ -2,8 +2,8 @@
 title: "About"
 ---
 
-About me
+## About me
 
-```{r}
-1 + 1
-```
+My name is Xinyee, and I'm a year 3 student in SMU majoring in Information Systems. I am also specialising in Business Analytics.
+
+As an avid foodie, I go around different parts of Singapore and even overseas like Korea, Japan, Taiwan, Thailand, Indonesia and Malaysia to look for good food.

@@ -1,0 +1,133 @@
+---
+title: "Hands On Exercise 01"
+date: "`r Sys.Date()`"
+format: html
+editor: visual
+---
+
+For Week 2
+
+## Installing packages
+
+<!--comment like this-->
+
+Install **sf** and **tidyverse**
+
+```{r}
+pacman::p_load(sf, tidyverse)
+```
+
+## Importing Geospatial Data
+
+**Importing polygon feature data in shapefile format**
+
+```{r}
+mpsz = st_read(dsn = "chap01/data/geospatial/master-plan-2014-subzone-boundary-web-shp", 
+                  layer = "MP14_SUBZONE_WEB_PL")
+```
+
+**Importing polyline feature data in shapefile form**
+
+```{r}
+cyclingpath = st_read(dsn = "chap01/data/geospatial/CyclingPath_Jun2022", 
+                         layer = "CyclingPathGazette")
+```
+
+**Importing GIS data in kml format**
+
+```{r}
+preschool = st_read("chap01/data/geospatial/pre-schools-location-kml.kml")
+```
+
+## Checking the Content of A Simple Feature Data Frame
+
+**Working with st_geometry()**
+
+```{r}
+st_geometry(mpsz)
+```
+
+**Working with glimpse()**
+
+```{r}
+glimpse(mpsz)
+```
+
+**Working with *head()***
+
+```{r}
+head(mpsz, n=5) 
+```
+
+## Plotting the Geospatial Data
+
+```{r}
+plot(mpsz)
+```
+
+```{r}
+plot(st_geometry(mpsz))
+```
+
+```{r}
+plot(mpsz["PLN_AREA_N"])
+```
+
+## Working with Projection
+
+**Assigning EPSG code to a simple feature data frame**
+
+```{r}
+st_crs(mpsz)
+```
+
+```{r}
+mpsz3414 <- st_set_crs(mpsz, 3414)
+```
+
+```{r}
+st_crs(mpsz3414)
+```
+
+**Transforming the projection of preschool from wgs84 to svy21**
+
+```{r}
+preschool3414 <- st_transform(preschool, 
+                              crs = 3414)
+```
+
+## Importing and Converting Aspatial Data
+
+```{r}
+listings <- read_csv("chap01/data/aspatial/listings.csv")
+```
+
+```{r}
+list(listings) 
+```
+
+**Creating a simple feature data frame from an aspatial data frame**
+
+```{r}
+listings_sf <- st_as_sf(listings, 
+                       coords = c("longitude", "latitude"),
+                       crs=4326) %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+glimpse(listings_sf)
+```
+
+## Geoprocessing with sf package
+
+**Buffering**
+
+```{r}
+buffer_cycling <- st_buffer(cyclingpath, 
+                               dist=5, nQuadSegs = 30)
+```
+
+```{r}
+buffer_cycling$AREA <- st_area(buffer_cycling)
+```
