@@ -1,0 +1,66 @@
+---
+title: "Take-Home Exercise 01"
+date: "30 January 2023"
+date-modified: "`r Sys.Date()`"
+author: "Xinyee How"
+format: html
+editor: visual
+execute: 
+  echo: true
+  eval: true
+  warning: false
+---
+
+## Exploratory Spatial Data Analysis (ESDA)
+
+### Kernel density maps of functional and non-functional water points using appropriate tmap functions
+
+```{r}
+pacman::p_load(maptools, sf, raster, spatstat, tmap)
+```
+
+**Kernel density maps on openstreetmap of Osub State, Nigeria**
+
+```{r}
+
+```
+
+**Describe the spatial patterns revealed by the kernel density maps. Highlight the advantage of kernel density map over point map**
+
+---jojo---
+
+## Second-order Spatial Point Patterns Analysis
+
+-   Formulate the null hypothesis and alternative hypothesis and select the confidence level.
+
+    ```{r}
+
+    ```
+
+-   Perform the test by using appropriate Second order spatial point patterns analysis technique.
+
+    ```{r}
+
+    ```
+
+-   With reference to the analysis results, draw statistical conclusions.
+
+    Hello hello
+
+## Spatial Correlation Analysis
+
+-   Formulate the null hypothesis and alternative hypothesis and select the confidence level.
+
+    ```{r}
+
+    ```
+
+-   Perform the test by using appropriate Second order spatial point patterns analysis technique.
+
+    ```{r}
+
+    ```
+
+-   With reference to the analysis results, draw statistical conclusions.
+
+    Hello hello
