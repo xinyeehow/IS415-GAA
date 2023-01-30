@@ -10,3 +10,53 @@ execute:
   eval: true
   warning: false
 ---
+
+## Installing and Loading the R packages
+
+```{r}
+pacman::p_load(maptools, sf, raster, spatstat, tmap)
+```
+
+## Importing the spatial data
+
+```{r}
+childcare_sf <- st_read("data/child-care-services-geojson.geojson") %>%
+  st_transform(crs = 3414)
+```
+
+For shapefile --\> have to define the destination (dsn)
+
+SVY21 usually have big numbers (in metres)
+
+Spatstat only can read ppp
+
+so if using sf packages you have to convert spatial dataframe --\> generic dataframe \--\> ppp format (only have coordinate values/no projection headers)
+
+```{r}
+sg_sf <- st_read(dsn = "data", layer="CostalOutline")
+```
+
+```{r}
+mpsz_sf <- st_read(dsn = "data", 
+                layer = "MP14_SUBZONE_WEB_PL")
+```
+
+```{r}
+childcare <- as_Spatial(childcare_sf)
+mpsz <- as_Spatial(mpsz_sf)
+sg <- as_Spatial(sg_sf)
+```
+
+## Converting the Spatial class into generic sp format
+
+```{r}
+childcare_sp <- as(childcare, "SpatialPoints")
+sg_sp <- as(sg, "SpatialPolygons")
+```
+
+## Converting the generic sp format into spatstat's ppp format
+
+```{r}
+childcare_ppp <- as(childcare_sp, "ppp")
+childcare_ppp
+```
