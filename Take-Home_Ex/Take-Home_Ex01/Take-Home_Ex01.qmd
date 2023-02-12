@@ -13,54 +13,701 @@ execute:
 
 ## Exploratory Spatial Data Analysis (ESDA)
 
+**Getting packages**
+
+```{r}
+pacman::p_load(sf, tidyverse, funModeling)
+```
+
+**Importing data - Geospatial**
+
+```{r}
+geoNGA <- st_read("data/geoBoundaries/",
+                  layer = "geoBoundaries-NGA-ADM2") %>%
+  st_transform(crs = 26392)
+```
+
+```{r}
+NGA <- st_read("data/",
+               layer = "nga_admbnda_adm2_osgof_20190417") %>%
+  st_transform(crs = 26392)
+```
+
+**Extract Osun state from Nigeria**
+
+```{r}
+osun <- st_read(dsn = "data/", 
+               layer = "nga_admbnda_adm2_osgof_20190417") %>%
+      filter(`ADM1_EN` == "Osun") %>%
+      st_transform(crs = 26392)
+```
+
+**Examining Osun layer**
+
+```{r}
+osun
+```
+
+**Importing data - Aspatial**
+
+```{r}
+wp_nga <- read_csv("data/WPdx.csv") %>%
+  filter(`clean_country_name` == "Nigeria", `clean_adm1` == "Osun")
+```
+
+**Filtering Osun state in Nigeria**
+
+```{r}
+wp_nga_osun <- wp_nga %>% filter(`clean_country_name` == "Nigeria", `clean_adm1` == "Osun")
+```
+
+**Examining the filtered waterpoint layer**
+
+```{r}
+wp_nga_osun
+```
+
+**Converting Aspatial to Geospatial data**
+
+```{r}
+wp_nga_osun = st_as_sf(wp_nga_osun, coords = c("lat_deg", "lon_deg"),crs=4326)
+wp_nga_osun
+
+wp_sf_osun <- st_sf(wp_nga_osun, crs=4326)
+wp_sf_osun
+```
+
+**Extracting waterpoints in Osun area**
+
+**Transforming project**
+
+```{r}
+wp_sf_osun <- wp_sf_osun %>%
+  st_transform(crs = 26392)
+```
+
+## Data Cleaning
+
+**Excluding redundant fields**
+
+```{r}
+NGA <- NGA %>%
+  select(c(3:4, 8:9))
+```
+
+**Checking for duplicate name**
+
+```{r}
+NGA$ADM2_EN[duplicated(NGA$ADM2_EN)==TRUE]
+```
+
+**Correcting errors**
+
+```{r}
+NGA$ADM2_EN[94] <- "Bassa, Kogi"
+NGA$ADM2_EN[95] <- "Bassa, Plateau"
+NGA$ADM2_EN[304] <- "Ifelodun, Kwara"
+NGA$ADM2_EN[305] <- "Ifelodun, Osun"
+NGA$ADM2_EN[355] <- "Irepodun, Kwara"
+NGA$ADM2_EN[356] <- "Irepodun, Osun"
+NGA$ADM2_EN[519] <- "Nasarawa, Kano"
+NGA$ADM2_EN[520] <- "Nasarawa, Nasarawa"
+NGA$ADM2_EN[546] <- "Obi, Benue"
+NGA$ADM2_EN[547] <- "Obi, Nasarawa"
+NGA$ADM2_EN[693] <- "Surulere, Lagos"
+NGA$ADM2_EN[694] <- "Surulere, Oyo"
+```
+
+```{r}
+NGA$ADM2_EN[duplicated(NGA$ADM2_EN)==TRUE]
+```
+
+## Data Wrangling (water point data)
+
+Bar graph of water status according to cleanliness of water
+
+```{r}
+freq(data = wp_sf_osun, input = 'status_clean')
+```
+
+## Categorising functional and non-functional water points
+
+**Functional**
+
+```{r}
+wp_functional <- wp_sf_osun %>%
+  filter(status_clean %in%
+           c("Functional",
+             "Functional but not in use",
+             "Functional but needs repair"))
+```
+
+```{r}
+freq(data = wp_functional,
+     input = 'status_clean')
+```
+
+**Non-functional**
+
+```{r}
+wp_nonfunctional <- wp_sf_osun %>%
+  filter(status_clean %in%
+           c("Abandoned/Decommissioned",
+             "Abandoned",
+             "Non-Functional due to dry season",
+             "Non-Functional",
+             "Non functional due to dry season"))
+```
+
+```{r}
+freq(data = wp_nonfunctional,
+     input = 'status_clean')
+```
+
+**Unknown**
+
+```{r}
+wp_unknown <- wp_sf_osun %>%
+  filter(status_clean == "unknown")
+```
+
+**Saving data**
+
+```{r}
+write_rds(wp_sf_osun, "data/rds/wp_sf_osun.rds")
+```
+
 ### Kernel density maps of functional and non-functional water points using appropriate tmap functions
+
+**Loading packages**
 
 ```{r}
 pacman::p_load(maptools, sf, raster, spatstat, tmap)
 ```
 
-**Kernel density maps on openstreetmap of Osub State, Nigeria**
+## Converting sf data frames to sp's Spatial\* class
 
 ```{r}
-
+osun
 ```
 
-**Describe the spatial patterns revealed by the kernel density maps. Highlight the advantage of kernel density map over point map**
+```{r}
+wp_functional_sf <- as_Spatial(wp_functional)
+wp_nonfunctional_sf <- as_Spatial(wp_nonfunctional)
+NGA_sf <- as_Spatial(NGA)
+osun_sf <- as_Spatial(osun)
+```
 
----jojo---
+```{r}
+wp_functional_sf
+```
+
+```{r}
+wp_nonfunctional_sf
+```
+
+```{r}
+NGA_sf
+```
+
+```{r}
+osun_sf
+```
+
+## Converting spatial class into generic sp format
+
+```{r}
+wp_functional_sp <- as(wp_functional_sf, "SpatialPoints")
+wp_nonfunctional_sp <- as(wp_nonfunctional_sf, "SpatialPoints")
+NGA_sp <- as(NGA_sf, "SpatialPolygons")
+osun_sp <- as(osun_sf, "SpatialPolygons")
+```
+
+```{r}
+wp_functional_sp
+```
+
+```{r}
+wp_nonfunctional_sp
+```
+
+```{r}
+NGA_sp
+```
+
+```{r}
+osun_sp
+```
+
+### Converting generic sp format into spatstat's ppp format
+
+```{r}
+wp_functional_ppp <- as(wp_functional_sp, "ppp")
+wp_functional_ppp
+```
+
+```{r}
+wp_nonfunctional_ppp <- as(wp_nonfunctional_sp, "ppp")
+wp_nonfunctional_ppp
+```
+
+**Plotting ppp points**
+
+```{r}
+plot(wp_functional_ppp)
+```
+
+```{r}
+plot(wp_nonfunctional_ppp)
+```
+
+**Summary statistics**
+
+```{r}
+summary(wp_functional_ppp)
+```
+
+```{r}
+summary(wp_nonfunctional_ppp)
+```
+
+**Checking for duplicates**
+
+```{r}
+any(duplicated(wp_functional_ppp))
+```
+
+```{r}
+any(duplicated(wp_nonfunctional_ppp))
+```
+
+**Creating owin object**
+
+```{r}
+NGA_owin <- as(NGA_sp, "owin")
+osun_owin <- as(osun_sp, "owin")
+```
+
+```{r}
+plot(NGA_owin)
+plot(osun_owin)
+```
+
+**Checking on owin summary statistics**
+
+```{r}
+summary(NGA_owin)
+summary(osun_owin)
+```
+
+### Combining waterpoints with Osun map
+
+**Functional waterpoints**
+
+```{r}
+wp_functional_ppp_osun = wp_functional_ppp[osun_owin]
+plot(wp_functional_ppp_osun)
+```
+
+**Loading packages**
+
+```{r}
+pacman::p_load(maptools, sf, raster, spatstat, tmap)
+```
+
+```{r}
+kde_wp_functional_bw <- density(wp_functional_ppp_osun,
+                              sigma=bw.diggle,
+                              edge=TRUE,
+                              scale="none",
+                              kernel="gaussian") 
+```
+
+**Plotting KDE for functional waterpoints**
+
+```{r}
+plot(kde_wp_functional_bw)
+```
+
+**Bandwidth used**
+
+```{r}
+bw <- bw.diggle(wp_functional_ppp_osun)
+bw
+```
+
+**Re-scaling data**
+
+```{r}
+wp_functional_ppp_osun.km <- rescale(wp_functional_ppp_osun, 1000, "km")
+```
+
+```{r}
+kde_wp_functional_bw <- density(wp_functional_ppp_osun.km, sigma=bw.diggle, edge=TRUE, kernel="gaussian")
+plot(kde_wp_functional_bw)
+```
+
+**Working with different kernel methods: Gaussian, Epanechnikov, Quartic and Discs**
+
+```{r}
+par(mfrow=c(2,2))
+plot(density(wp_functional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="gaussian"), 
+     main="Gaussian")
+plot(density(wp_functional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="epanechnikov"), 
+     main="Epanechnikov")
+plot(density(wp_functional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="quartic"), 
+     main="Quartic")
+plot(density(wp_functional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="disc"), 
+     main="Disc")
+```
+
+**Non-functional waterpoints**
+
+```{r}
+wp_nonfunctional_ppp_osun = wp_nonfunctional_ppp[osun_owin]
+plot(wp_nonfunctional_ppp_osun)
+```
+
+```{r}
+kde_wp_nonfunctional_bw <- density(wp_nonfunctional_ppp_osun,
+                              sigma=bw.diggle,
+                              edge=TRUE,
+                            kernel="gaussian") 
+```
+
+```{r}
+plot(kde_wp_nonfunctional_bw)
+```
+
+**Computing sigma**
+
+```{r}
+bw <- bw.diggle(wp_nonfunctional_ppp_osun)
+bw
+```
+
+**Re-scaling data**
+
+```{r}
+wp_nonfunctional_ppp_osun.km <- rescale(wp_nonfunctional_ppp_osun, 1000, "km")
+```
+
+**Plotting re-scaled data**
+
+```{r}
+kde_wp_nonfunctional_bw <- density(wp_nonfunctional_ppp_osun.km, sigma=bw.diggle, edge=TRUE, kernel="gaussian")
+plot(kde_wp_nonfunctional_bw)
+```
+
+**Working with different kernel methods: Gaussian, Epanechnikov, Quartic and Discs**
+
+```{r}
+par(mfrow=c(2,2))
+plot(density(wp_nonfunctional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="gaussian"), 
+     main="Gaussian")
+plot(density(wp_nonfunctional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="epanechnikov"), 
+     main="Epanechnikov")
+plot(density(wp_nonfunctional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="quartic"), 
+     main="Quartic")
+plot(density(wp_nonfunctional_ppp_osun.km, 
+             sigma=bw.ppl, 
+             edge=TRUE, 
+             kernel="disc"), 
+     main="Disc")
+```
+
+**Kernel density maps on openstreetmap of Osun State, Nigeria**
+
+```{r}
+tmap_mode('view')
+tm_shape(wp_functional) +
+    tm_dots(alpha=0.4, 
+            size=0.05)
+```
+
+**Converting functional waterpoints gridded output into raster**
+
+```{r}
+gridded_kde_wp_functional_bw <- as.SpatialGridDataFrame.im(kde_wp_functional_bw)
+spplot(gridded_kde_wp_functional_bw)
+```
+
+```{r}
+kde_wp_functional_bw_raster <- raster(gridded_kde_wp_functional_bw)
+```
+
+```{r}
+kde_wp_functional_bw_raster
+```
+
+```{r}
+projection(kde_wp_functional_bw_raster) <- CRS("+init=EPSG:26392")
+kde_wp_functional_bw_raster
+```
+
+**Plotting raster map**
+
+```{r}
+tm_shape(kde_wp_functional_bw_raster) + 
+tm_basemap("OpenStreetMap") +
+  tm_raster("v") +
+  tm_layout(legend.position = c("right", "bottom"), frame = FALSE)
+```
+
+**Converting nonfunctional waterpoints gridded output into raster**
+
+```{r}
+gridded_kde_wp_nonfunctional_bw <- as.SpatialGridDataFrame.im(kde_wp_nonfunctional_bw)
+spplot(gridded_kde_wp_nonfunctional_bw)
+```
+
+```{r}
+kde_wp_nonfunctional_bw_raster <- raster(gridded_kde_wp_nonfunctional_bw)
+```
+
+```{r}
+kde_wp_nonfunctional_bw_raster
+```
+
+**Changing projection**
+
+```{r}
+projection(kde_wp_nonfunctional_bw_raster) <- CRS("+init=EPSG:26392")
+kde_wp_nonfunctional_bw_raster
+```
+
+```{r}
+tm_shape(kde_wp_nonfunctional_bw_raster) + 
+  tm_basemap("OpenStreetMap") +
+  tm_raster("v") +
+  tm_layout(legend.position = c("right", "bottom"), frame = FALSE)
+```
+
+### Analysis:
+
+From the plots above, we can observe that both the functional and nonfunctional waterpoints seem to scatter unevenly through the whole of Osun state in Nigeria. For the functional waterpoints, they seem to gather around the top of Osun state in Nigeria (north of Osun), leaving the other areas of Osun to have reduced accessibility to clean water points for consumption. For the nonfunctional waterpoints, they seem to be scattered around the whole Osun state unevenly as well, with some concentration of nonfunctional waterpoints at the top (north of Osun) and centre (Osun central).
+
+Advantages of Kernel Density Map over point maps, is that it increases the visibility of the areas with higher densities of, in this case functional/nonfunctional waterpoints. Areas with higher densities of functional/nonfunctional waterpoints can be easily pin-pointed out with the darker colour intensities on the Kernel Density Map instead of having multiple points stacked together on the point maps and having to zoom in to see the actual points.
+
+### Nearest Neighbour Analysis: Clark and Evans Test
+
+**Functional waterpoints**
+
+```{r}
+clarkevans.test(wp_functional_ppp,
+                correction="none",
+                clipregion="osun_owin",
+                alternative=c("clustered"),
+                nsim=99)
+```
+
+**Nonfunctional waterpoints**
+
+```{r}
+clarkevans.test(wp_nonfunctional_ppp,
+                correction="none",
+                clipregion="osun_owin",
+                alternative=c("clustered"),
+                nsim=99)
+```
 
 ## Second-order Spatial Point Patterns Analysis
 
--   Formulate the null hypothesis and alternative hypothesis and select the confidence level.
+### Analysing Spatial Point Process Using L-Function
 
-    ```{r}
+**Computing L Function estimation of Functional Waterpoints**
 
-    ```
+```{r}
+L_wp_functional = Lest(wp_functional_ppp, correction = "Ripley")
+plot(L_wp_functional, . -r ~ r, 
+     ylab= "L(d)-r", xlab = "d(m)")
+```
 
--   Perform the test by using appropriate Second order spatial point patterns analysis technique.
+**Performing Complete Spatial Randomness Test of Functional Waterpoints**
 
-    ```{r}
+[Hypothesis:]{.underline}
 
-    ```
+Ho = The distribution of functional waterpoints in Osun, Nigeria are randomly distributed.
 
--   With reference to the analysis results, draw statistical conclusions.
+H1= The distribution of functional waterpoints in Osun, Nigeria are not randomly distributed.
 
-    Hello hello
+[Confidence Level:]{.underline}
+
+The null hypothesis will be rejected if p-value if smaller than alpha value of 0.001.
+
+```{r}
+L_wp_functional.csr <- envelope(wp_functional_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
+```
+
+```{r}
+plot(L_wp_functional.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+```
+
+**Computing L Function estimation of Nonfunctional Waterpoints**
+
+```{r}
+L_wp_nonfunctional = Lest(wp_nonfunctional_ppp, correction = "Ripley")
+plot(L_wp_nonfunctional, . -r ~ r, 
+     ylab= "L(d)-r", xlab = "d(m)")
+```
+
+**Performing Complete Spatial Randomness Test of Nonfunctional Waterpoints**
+
+[Hypothesis:]{.underline}
+
+Ho = The distribution of non-functional waterpoints in Osun, Nigeria are randomly distributed.
+
+H1= The distribution of non-functional waterpoints in Osun, Nigeria are not randomly distributed.
+
+[Confidence Level:]{.underline}
+
+The null hypothesis will be rejected if p-value if smaller than alpha value of 0.001.
+
+```{r}
+L_wp_nonfunctional.csr <- envelope(wp_nonfunctional_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
+```
+
+```{r}
+plot(L_wp_nonfunctional.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+```
+
+**Analysis:**
+
+The L function for both functional and nonfunctional waterpoints have the same shape of an exponential curve. Since the L function is a form of descriptive statistics generally used to determine whether points have a random, dispersed or clustered distribution pattern at certain scale, we can conclude that there are some forms of clustering for both the functional and nonfunctional waterpoints in Osun, Nigeria, at 99% confidence interval.
 
 ## Spatial Correlation Analysis
 
--   Formulate the null hypothesis and alternative hypothesis and select the confidence level.
+I will be analysis the co-location between the functional and non-functional water points' distribution, using the LCLQ method.
 
-    ```{r}
+[Hypothesis:]{.underline}
 
-    ```
+Ho = Functional waterpoints are not co-located with nonfunctional water points.
 
--   Perform the test by using appropriate Second order spatial point patterns analysis technique.
+H1= Functional waterpoints are co-located with nonfunctional water points.
 
-    ```{r}
+[Confidence Level:]{.underline}
 
-    ```
+The null hypothesis will be rejected if p-value if smaller than alpha value of 0.05
 
--   With reference to the analysis results, draw statistical conclusions.
+**Installing package**
 
-    Hello hello
+```{r}
+pacman::p_load(tidyverse, tmap, sf, sfdep) 
+```
+
+**Preparing nearest neighbours list**
+
+Determine the k (i.e. 6) nearest neighbours for given point geometry
+
+```{r}
+nb <- include_self(
+  st_knn(st_geometry(wp_sf), 6))
+```
+
+**Computing kernel weights**
+
+Derive a weights list by using a kernel function
+
+```{r}
+wt <- st_kernel_weights(nb, 
+                        wp_sf, 
+                        "gaussian", 
+                        adaptive = TRUE)
+```
+
+**Categorising functional and nonfunctional waterpoints**
+
+```{r}
+wp_sf_osun <- wp_sf %>%
+  mutate(`func_status` = case_when(
+    `#status_clean` %in% c("Functional", 
+                          "Functional but not in use",
+                          "Functional but needs repair") ~ 
+      "Functional",
+    `#status_clean` %in% c("Abandoned/Decommissioned",
+                               "Non-Functional due to dry season",
+                               "Non-Functional",
+                               "Abandoned",
+                               "Non functional due to dry season") ~ 
+      "Non-Functional",
+    `#status_clean` == "Unknown" ~ "Unknown"))
+```
+
+**Verifying attributes**
+
+```{r}
+wp_sf_osun
+```
+
+**Filtering functional and nonfunctional waterpoints**
+
+```{r}
+wp_sf_osun_known <- wp_sf_osun %>%
+  filter(`func_status` %in% c("Functional", "Non-Functional"))
+```
+
+**Converting functional and nonfunctional waterpoints into vectors**
+
+```{r}
+functional_list <- wp_sf_osun_known %>%
+  filter(`func_status` == "Functional") %>%
+  dplyr::pull(`func_status`)
+
+non_functional_list <- wp_sf_osun_known %>%
+  filter(`func_status` == "Non-Functional") %>%
+  dplyr::pull(`func_status`)
+```
+
+**Computing LCLQ values**
+
+```{r}
+LCLQ <- local_colocation(functional_list,
+                         non_functional_list,
+                         nb,
+                         wt,
+                         49)
+```
+
+**Joining output table**
+
+```{r}
+LCLQ_wp <- cbind(wp_sf, LCLQ)
+```
+
+**Plotting LCLQ values**
+
+```{r}
+tmap_mode("view")
+tm_shape(LCLQ_wp)+ 
+  tm_dots(col = "Non.Functional",
+             size = 0.01,
+             border.col = "black",
+          scale=0.15,
+             border.lwd = 0.5) +
+  tm_view(set.zoom.limits = c(12, 16))
+```
+
+**Analysis:**
+
+As we can observe from the map plotted above, waterpoints with their LCLQ value of 1 (in yellow) are displayed. We can conclude that our null hypothesis is true; that functional waterpoints are not co-located with nonfunctional water points in Osun state (Nigeria).
