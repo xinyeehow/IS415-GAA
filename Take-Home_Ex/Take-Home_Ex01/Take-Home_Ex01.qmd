@@ -1,7 +1,6 @@
 ---
 title: "Take-Home Exercise 01"
 date: "30 January 2023"
-date-modified: "`r Sys.Date()`"
 author: "Xinyee How"
 format: html
 editor: visual
@@ -16,7 +15,7 @@ execute:
 **Getting packages**
 
 ```{r}
-pacman::p_load(sf, tidyverse, funModeling)
+pacman::p_load(sf, tidyverse, funModeling, ggplot2)
 ```
 
 **Importing data - Geospatial**
@@ -52,29 +51,29 @@ osun
 
 ```{r}
 wp_nga <- read_csv("data/WPdx.csv") %>%
-  filter(`clean_country_name` == "Nigeria", `clean_adm1` == "Osun")
-```
-
-**Filtering Osun state in Nigeria**
-
-```{r}
-wp_nga_osun <- wp_nga %>% filter(`clean_country_name` == "Nigeria", `clean_adm1` == "Osun")
+  filter(`#clean_country_name` == "Nigeria", `#clean_adm1` == "Osun")
 ```
 
 **Examining the filtered waterpoint layer**
 
 ```{r}
-wp_nga_osun
+glimpse(wp_nga)
 ```
 
 **Converting Aspatial to Geospatial data**
 
 ```{r}
-wp_nga_osun = st_as_sf(wp_nga_osun, coords = c("lat_deg", "lon_deg"),crs=4326)
-wp_nga_osun
+wp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)
+```
 
-wp_sf_osun <- st_sf(wp_nga_osun, crs=4326)
-wp_sf_osun
+```{r}
+#wp_nga = st_as_sf(wp_nga, coords = c("lat_deg", "lon_deg"),crs=4326)
+#wp_nga
+```
+
+```{r}
+wp_sf <- st_sf(wp_nga, crs=4326)
+st_geometry(wp_sf)
 ```
 
 **Extracting waterpoints in Osun area**
@@ -82,18 +81,11 @@ wp_sf_osun
 **Transforming project**
 
 ```{r}
-wp_sf_osun <- wp_sf_osun %>%
+wp_sf <- wp_sf %>%
   st_transform(crs = 26392)
 ```
 
 ## Data Cleaning
-
-**Excluding redundant fields**
-
-```{r}
-NGA <- NGA %>%
-  select(c(3:4, 8:9))
-```
 
 **Checking for duplicate name**
 
@@ -127,7 +119,7 @@ NGA$ADM2_EN[duplicated(NGA$ADM2_EN)==TRUE]
 Bar graph of water status according to cleanliness of water
 
 ```{r}
-freq(data = wp_sf_osun, input = 'status_clean')
+ggplot(wp_sf) + geom_bar(aes(y = fct_infreq(`#status_clean`), fill=`#status_clean`, stat="identity"))+  theme(legend.position = "right")
 ```
 
 ## Categorising functional and non-functional water points
@@ -135,23 +127,22 @@ freq(data = wp_sf_osun, input = 'status_clean')
 **Functional**
 
 ```{r}
-wp_functional <- wp_sf_osun %>%
-  filter(status_clean %in%
+wp_functional <- wp_sf %>%
+  filter(`#status_clean` %in%
            c("Functional",
              "Functional but not in use",
              "Functional but needs repair"))
 ```
 
 ```{r}
-freq(data = wp_functional,
-     input = 'status_clean')
+ggplot(wp_functional) + geom_bar(aes(y = fct_infreq(`#status_clean`), fill=`#status_clean`, stat="identity"))+  theme(legend.position = "right")
 ```
 
 **Non-functional**
 
 ```{r}
-wp_nonfunctional <- wp_sf_osun %>%
-  filter(status_clean %in%
+wp_nonfunctional <- wp_sf %>%
+  filter(`#status_clean` %in%
            c("Abandoned/Decommissioned",
              "Abandoned",
              "Non-Functional due to dry season",
@@ -160,21 +151,13 @@ wp_nonfunctional <- wp_sf_osun %>%
 ```
 
 ```{r}
-freq(data = wp_nonfunctional,
-     input = 'status_clean')
-```
-
-**Unknown**
-
-```{r}
-wp_unknown <- wp_sf_osun %>%
-  filter(status_clean == "unknown")
+ggplot(wp_nonfunctional) + geom_bar(aes(y = fct_infreq(`#status_clean`), fill=`#status_clean`, stat="identity"))+  theme(legend.position = "right")
 ```
 
 **Saving data**
 
 ```{r}
-write_rds(wp_sf_osun, "data/rds/wp_sf_osun.rds")
+write_rds(wp_sf, "data/rds/wp_sf.rds")
 ```
 
 ### Kernel density maps of functional and non-functional water points using appropriate tmap functions
@@ -186,10 +169,6 @@ pacman::p_load(maptools, sf, raster, spatstat, tmap)
 ```
 
 ## Converting sf data frames to sp's Spatial\* class
-
-```{r}
-osun
-```
 
 ```{r}
 wp_functional_sf <- as_Spatial(wp_functional)
@@ -315,12 +294,13 @@ plot(wp_functional_ppp_osun)
 pacman::p_load(maptools, sf, raster, spatstat, tmap)
 ```
 
+**Prepping KDE plot**
+
 ```{r}
 kde_wp_functional_bw <- density(wp_functional_ppp_osun,
                               sigma=bw.diggle,
                               edge=TRUE,
-                              scale="none",
-                              kernel="gaussian") 
+                              kernel="gaussian")
 ```
 
 **Plotting KDE for functional waterpoints**
@@ -636,54 +616,18 @@ wt <- st_kernel_weights(nb,
                         adaptive = TRUE)
 ```
 
-**Categorising functional and nonfunctional waterpoints**
-
-```{r}
-wp_sf_osun <- wp_sf %>%
-  mutate(`func_status` = case_when(
-    `#status_clean` %in% c("Functional", 
-                          "Functional but not in use",
-                          "Functional but needs repair") ~ 
-      "Functional",
-    `#status_clean` %in% c("Abandoned/Decommissioned",
-                               "Non-Functional due to dry season",
-                               "Non-Functional",
-                               "Abandoned",
-                               "Non functional due to dry season") ~ 
-      "Non-Functional",
-    `#status_clean` == "Unknown" ~ "Unknown"))
-```
-
-**Verifying attributes**
-
-```{r}
-wp_sf_osun
-```
-
-**Filtering functional and nonfunctional waterpoints**
-
-```{r}
-wp_sf_osun_known <- wp_sf_osun %>%
-  filter(`func_status` %in% c("Functional", "Non-Functional"))
-```
-
 **Converting functional and nonfunctional waterpoints into vectors**
 
 ```{r}
-functional_list <- wp_sf_osun_known %>%
-  filter(`func_status` == "Functional") %>%
-  dplyr::pull(`func_status`)
-
-non_functional_list <- wp_sf_osun_known %>%
-  filter(`func_status` == "Non-Functional") %>%
-  dplyr::pull(`func_status`)
+A <- wp_functional$`#status_clean`
+B <- wp_nonfunctional$`#status_clean`
 ```
 
 **Computing LCLQ values**
 
 ```{r}
-LCLQ <- local_colocation(functional_list,
-                         non_functional_list,
+LCLQ <- local_colocation(A,
+                         B,
                          nb,
                          wt,
                          49)
@@ -710,4 +654,4 @@ tm_shape(LCLQ_wp)+
 
 **Analysis:**
 
-As we can observe from the map plotted above, waterpoints with their LCLQ value of 1 (in yellow) are displayed. We can conclude that our null hypothesis is true; that functional waterpoints are not co-located with nonfunctional water points in Osun state (Nigeria).
+As we can observe from the map plotted above, waterpoints with their LCLQ value of 0.7 to 1.1 (in yellow to brown) are displayed. We can conclude that our null hypothesis is true; that functional waterpoints are not co-located with nonfunctional water points in Osun state (Nigeria).
