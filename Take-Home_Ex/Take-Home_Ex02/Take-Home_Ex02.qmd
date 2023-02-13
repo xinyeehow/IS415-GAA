@@ -1,0 +1,36 @@
+---
+title: "Take-Home Exercise 02"
+date: "12 February 2023"
+date-modified: "`r Sys.Date()`"
+author: "Xinyee How"
+format: html
+editor: visual
+execute: 
+  echo: true
+  eval: true
+  warning: false
+---
+
+## Getting Started
+
+### Installing packages
+
+```{r}
+pacman::p_load(tidyverse, tmap, sf, spdep, sfdep) 
+```
+
+### Importing data
+
+**Geospatial**
+
+```{r}
+jakarta <- st_read(dsn = "data", 
+                 layer="BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA") %>%
+  st_transform(crs = 23845)
+```
+
+**Aspatial - Vaccination rates of Jakarta from July 2021 to June 2022 (data taken from every first day of the month)**
+
+```{r}
+vac_status <- read_csv("data/July2021.xlsx")
+```

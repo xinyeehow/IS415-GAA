@@ -1,6 +1,6 @@
 ---
-title: "In-Class Exercise 04"
-date: "12 February 2023"
+title: "In-Class Exercise 06"
+date: "13 February 2023"
 date-modified: "`r Sys.Date()`"
 author: "Xinyee How"
 format: html
@@ -11,4 +11,82 @@ execute:
   warning: false
 ---
 
-## 
+## Installing packages
+
+```{r}
+pacman::p_load(tidyverse, tmap, sf, spdep, sfdep) 
+```
+
+**Importing geospatial data**
+
+```{r}
+hunan <- st_read("data/geospatial/",
+                  layer = "Hunan") %>%
+  st_transform(crs = 26392)
+```
+
+**Importing aspatial data**
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+**Combining Hunan sf dataframe and Hunan_2012 dataframe**
+
+*If want to retain the geometry, have to join the left side of the data frame*
+
+```{r}
+hunan_GDPPC <- left_join(hunan,hunan2012)%>% #will auto join by a matching column
+  select(1:4, 7, 15) #selecting columns to retain
+```
+
+### Plotting chloropleth map
+
+```{r}
+tmap_mode("plot") #static map, if want interactive->tmap_mode("view")
+tm_shape(hunan_GDPPC)+
+  tm_fill("GDPPC", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "GDP Per Capita") +
+  tm_layout(main.title = "Distribution of GDP per capita in Hunan",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2)
+```
+
+## Identify area neighbours
+
+**Calculate contiguity neighbours**
+
+```{r}
+cn_queen <- hunan_GDPPC %>%
+  mutate(nb= st_contiguity(geometry),
+        .before = 1)
+```
+
+**Contiguity neighbour list using Rook's method**
+
+```{r}
+cn_rook <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         queen = FALSE,
+         .before = 1)
+```
+
+### Computing contiguity weights
+
+**Queen's method - combining weights**
+
+```{r}
+wm_q <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb),
+         .before = 1)
+```
