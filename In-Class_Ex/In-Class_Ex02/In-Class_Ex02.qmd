@@ -28,7 +28,7 @@ NGA <- st_read("geospatial/",
 ## Importing aspatial data
 
 ```{r}
-wp_nga <- read_csv("aspatial/WPdx.csv") %>%
+wp_nga <- read_csv("data/aspatial/WPdx.csv") %>%
   filter(`#clean_country_name` == "Nigeria")
 ```
 

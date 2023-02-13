@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-02-12">
+<meta name="dcterms.date" content="2023-02-13">
 
 <title>IS415-GAA - In-Class Exercise 02</title>
 <style>
@@ -176,6 +176,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex05/In-Class_Ex05.html">
  <span class="dropdown-text">In-Class Exercise 5</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-class_Ex06/In-class_Ex06.html">
+ <span class="dropdown-text">In-Class Exercise 6</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -200,8 +204,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="dropdown-text">Hands-On Exercise 4B</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex05/Hands-On_Ex05.html">
- <span class="dropdown-text">Hands-On Exercise 5</span></a>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex06/Hands-On_Ex06.qmd">
+ <span class="dropdown-text">Hands-On Exercise 6</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex07/Hands-On_Ex07.qmd">
+ <span class="dropdown-text">Hands-On Exercise 6</span></a>
   </li>  
     </ul>
   </li>
@@ -215,7 +223,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="dropdown-text">Take-Home Exercise 1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex02/Take-Home_Ex02.qmd">
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex02/Take-Home_Ex02.html">
  <span class="dropdown-text">Take-Home Exercise 2</span></a>
   </li>  
         <li>
@@ -266,7 +274,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 12, 2023</p>
+      <p class="date">February 13, 2023</p>
     </div>
   </div>
   
@@ -319,7 +327,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <section id="importing-aspatial-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-aspatial-data">Importing aspatial data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wp_nga <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"aspatial/WPdx.csv"</span>) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wp_nga <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/WPdx.csv"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">#clean_country_name</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Nigeria"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
