@@ -16,7 +16,7 @@ execute:
 ### Installing packages
 
 ```{r}
-pacman::p_load(tidyverse, tmap, sf, spdep, sfdep) 
+pacman::p_load(tidyverse, tmap, sf, spdep, sfdep, readxl) 
 ```
 
 ### Importing data
@@ -32,5 +32,27 @@ jakarta <- st_read(dsn = "data",
 **Aspatial - Vaccination rates of Jakarta from July 2021 to June 2022 (data taken from every first day of the month)**
 
 ```{r}
-vac_status <- read_csv("data/July2021.xlsx")
+vac_status_july <- read_excel("data/July2021.xlsx")
+```
+
+```{r}
+vac_status_july
+```
+
+```{r}
+files <- c("data/July2021.xlsx","data/August2021.xlsx", "data/September2021.xlsx", "data/October2021.xlsx", "data/November2021.xlsx", "data/December2021.xlsx", "data/January2022.xlsx", "data/February2022.xlsx", "data/March2022.xlsx", "data/April2022.xlsx", "data/May2022.xlsx", "data/June2022.xlsx")
+names <- c("july", "august", "september", "october", "november", "december", "january", "february", "march", "april", "may", "june")
+
+result <- list()
+for (i in seq_along(files)) {
+  result[names[i]] <- read_excel(path = files[i])
+}
+```
+
+```{r}
+result
+```
+
+```{r}
+result$july
 ```
