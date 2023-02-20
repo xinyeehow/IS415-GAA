@@ -43,16 +43,36 @@ vac_status_july
 files <- c("data/July2021.xlsx","data/August2021.xlsx", "data/September2021.xlsx", "data/October2021.xlsx", "data/November2021.xlsx", "data/December2021.xlsx", "data/January2022.xlsx", "data/February2022.xlsx", "data/March2022.xlsx", "data/April2022.xlsx", "data/May2022.xlsx", "data/June2022.xlsx")
 names <- c("july", "august", "september", "october", "november", "december", "january", "february", "march", "april", "may", "june")
 
-result <- list()
-for (i in seq_along(files)) {
-  result[names[i]] <- read_excel(path = files[i])
-}
+#setNames(do.call(rbind,Map(`cbind`, 
+#           lapply(files, read.table, sep=""), V4=files)), names)
+
+#result <- list()
+#for (i in seq_along(files)) {
+#  result[names[i]] <- read_excel(path = files[i])
+#}
 ```
 
 ```{r}
-result
+#setwd("C:/xinyeehow/IS415-GAA/Take-Home_Ex/Take-Home_Ex02/data")
+
+#file_list <- list.files(pattern = "*.xlsx")
+#for (i in file_list) {
+#  assign(gsub(".xlsx", "", i),read_excel(i))
+#}
 ```
 
 ```{r}
-result$july
+#rbindfile_list
+```
+
+```{r}
+#for (i in file_list) {
+ # i <- cbind(i, )
+```
+
+```{r}
+#file_paths <- list.files("C:/xinyeehow/IS415-GAA/Take-Home_Ex/Take-Home_Ex02/data", pattern = ".xlsx$", full.names = TRUE)
+
+#do.call(rbind, lapply(file_paths, function(x) 
+#    transform(readxl::read_excel(x), date = sub(".xlsx$", "", basename(x)))))
 ```

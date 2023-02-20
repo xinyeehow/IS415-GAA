@@ -79,9 +79,9 @@ rswm_q <- nb2listw(wm_q,
 rswm_q
 ```
 
-### Global Spatial Autocorrelation: Moran\'s I
+### Global Spatial Autocorrelation: Moran's I
 
-Maron\'s I test
+Maron's I test
 
 ```{r}
 moran.test(hunan$GDPPC, 
@@ -90,7 +90,7 @@ moran.test(hunan$GDPPC,
            na.action=na.omit)
 ```
 
-Computing Monte Carlo Moran\'s I
+Computing Monte Carlo Moran's I
 
 ```{r}
 set.seed(1234)
@@ -102,7 +102,7 @@ bperm= moran.mc(hunan$GDPPC,
 bperm
 ```
 
-Visualising Monte Carlo Moran\'s I
+Visualising Monte Carlo Moran's I
 
 [Computing statistical values]{.underline}
 
@@ -127,15 +127,15 @@ abline(v=0,
        col="red") 
 ```
 
-### Global Spatial Autocorrelation: Geary\'s
+### Global Spatial Autocorrelation: Geary's
 
-[Geary\'s C test]{.underline}
+[Geary's C test]{.underline}
 
 ```{r}
 geary.test(hunan$GDPPC, listw=rswm_q)
 ```
 
-Computing Monte Carlo Geary\'s C
+Computing Monte Carlo Geary's C
 
 ```{r}
 set.seed(1234)
@@ -145,7 +145,7 @@ bperm=geary.mc(hunan$GDPPC,
 bperm
 ```
 
-Visualising the Monte Carlo Geary\'s C
+Visualising the Monte Carlo Geary's C
 
 [Computing statistical values]{.underline}
 
@@ -168,7 +168,7 @@ abline(v=1, col="red")
 
 ### Spatial Correlogram
 
-Compute Moran\'s I correlogram
+Compute Moran's I correlogram
 
 ```{r}
 MI_corr <- sp.correlogram(wm_q, 
@@ -185,7 +185,7 @@ Analysis of results
 print(MI_corr)
 ```
 
-### Compute Geary\'s C correlogram and plot
+### Compute Geary's C correlogram and plot
 
 ```{r}
 GC_corr <- sp.correlogram(wm_q, 
@@ -204,7 +204,7 @@ print(GC_corr)
 
 ## Cluster and Outlier Analysis
 
-Computing local Moran\'s I
+Computing local Moran's I
 
 ```{r}
 fips <- order(hunan$County)
@@ -221,14 +221,14 @@ printCoefmat(data.frame(
   check.names=FALSE)
 ```
 
-Mapping the local Moran\'s I
+Mapping the local Moran's I
 
 ```{r}
 hunan.localMI <- cbind(hunan,localMI) %>%
   rename(Pr.Ii = Pr.z....E.Ii..)
 ```
 
-Mapping local Moran\'s I values
+Mapping local Moran's I values
 
 ```{r}
 tm_shape(hunan.localMI) +
@@ -239,7 +239,7 @@ tm_shape(hunan.localMI) +
   tm_borders(alpha = 0.5)
 ```
 
-Mapping local Moran\'s I p-values
+Mapping local Moran's I p-values
 
 ```{r}
 tm_shape(hunan.localMI) +
@@ -250,7 +250,7 @@ tm_shape(hunan.localMI) +
   tm_borders(alpha = 0.5)
 ```
 
-Mapping both local Moran\'s I values and p-values
+Mapping both local Moran's I values and p-values
 
 ```{r}
 localMI.map <- tm_shape(hunan.localMI) +
@@ -313,7 +313,7 @@ hunan$lag_GDPPC <- lag.listw(rswm_q, hunan$GDPPC)
 DV <- hunan$lag_GDPPC - mean(hunan$lag_GDPPC)     
 ```
 
-Centering the local Moran\'s around the mean
+Centering the local Moran's around the mean
 
 ```{r}
 LM_I <- localMI[,1] - mean(localMI[,1])    
@@ -372,7 +372,7 @@ tm_shape(hunan.localMI) +
   tm_borders(alpha=0.5)
 ```
 
-Plotting both the local Moran\'s I values map and its corresponding p-values map next to each other
+Plotting both the local Moran's I values map and its corresponding p-values map next to each other
 
 ```{r}
 gdppc <- qtm(hunan, "GDPPC")

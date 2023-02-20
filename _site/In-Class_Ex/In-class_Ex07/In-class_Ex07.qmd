@@ -1,0 +1,209 @@
+---
+title: "In-Class Exercise 07"
+date: "20 February 2023"
+date-modified: "`r Sys.Date()`"
+author: "Xinyee How"
+format: html
+editor: visual
+execute: 
+  echo: true
+  eval: true
+  warning: false
+---
+
+### Installing packages
+
+```{r}
+pacman::p_load(sf, spdep, sfdep, tmap, tidyverse, plotly, zoo)
+```
+
+**Importing geospatial data - shapefile**
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan")
+```
+
+**Importing aspatial data - csv file**
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+**Performing relational join**
+
+```{r}
+hunan <- left_join(hunan,hunan2012) %>%
+  select(1:4, 7, 15)
+```
+
+Plotting chloropleth map
+
+```{r}
+tmap_mode("plot") #static map, if want interactive->tmap_mode("view")
+tm_shape(hunan)+
+  tm_fill("GDPPC", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "GDP Per Capita") +
+  tm_layout(main.title = "Distribution of GDP per capita in Hunan",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2)
+```
+
+## Identify area neighbours
+
+**Deriving contiguity weights - Queen's method**
+
+"W" is for row standardised weights
+
+```{r}
+wm_q <- hunan %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb,
+                         style = "W"),
+         .before = 1)
+```
+
+**Computing Global Moran' I**
+
+```{r}
+moranI <- global_moran(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+```
+
+**Performing Global Moran'I test**
+
+notice the p value given (smaller than alpha value -\> reject null hypothesis that it's spatial independent)
+
+Moran'I value also suggests signs of clustering
+
+```{r}
+global_moran_test(wm_q$GDPPC,
+                  wm_q$nb,
+                  wm_q$wt)
+```
+
+**Performing Global Moran'I permutation test**
+
+Monte Carlo simulation
+
+```{r}
+#to make sure work is reproducible 
+set.seed(1234)
+```
+
+```{r}
+global_moran_perm(wm_q$GDPPC,
+                  wm_q$nb,
+                  wm_q$wt,
+                  nsim=99)
+```
+
+**Computing local Moran'I**
+
+```{r}
+lisa <- wm_q %>%
+  mutate(local_moran = local_moran(
+    GDPPC, nb, wt, nsim=99),
+    .before = 1) %>%
+  unnest(local_moran)
+lisa
+```
+
+**Visualising local Moran'I**
+
+```{r}
+#tmap_mode("plot")
+#tm_shape(lisa) +
+#  tm_fill("li") +
+#  tm_borders(alpha = 0.5) +
+#  tm_view(set.zoom.limits = c(6,8))
+```
+
+```{r}
+lisa_sig <- lisa %>%
+  filter(p_ii <0.05)
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+tm_shape(lisa_sig) + 
+  tm_fill("mean") +
+  tm_borders(alpha = 0.4)
+```
+
+**Hotspot and cold spot analysis**
+
+Use gstar in general
+
+use local_gstar_perm to ensure more stable results
+
+unnest = to prepare for map plotting
+
+```{r}
+HCSA <- wm_q %>%
+  mutate(local_Gi = local_gstar_perm(
+    GDPPC, nb, wt, nsim=99),
+    .before = 1) %>%
+  unnest(local_Gi)
+HCSA
+```
+
+Visualising Gi
+
+```{r}
+
+```
+
+**Visualising p-value of HCSA**
+
+```{r}
+tmap_mode("plot")
+tm_shape(HCSA) + 
+  tm_fill("p_sim") +
+  tm_borders(alpha = 0.5)
+```
+
+## Emerging hot spot analysis
+
+Importing asapatial
+
+```{r}
+GDPPC <- read_csv("data/aspatial/Hunan_GDPPC.csv")
+```
+
+```{r}
+GDPPC_st <- spacetime(GDPPC,hunan,
+                      .loc_col = "County",
+                      .time_col = "Year")
+```
+
+```{r}
+GDPPC_nb <- GDPPC_st %>%
+  activate("geometry") %>%
+  mutate(
+    nb = include_self(st_contiguity(geometry)),
+    wt = st_weights(nb)
+  ) %>%
+  set_nbs("nb") %>%
+  set_wts("wt")
+```
+
+**Computing Gi**
+
+```{r}
+gi_stars <- GDPPC_nb %>%
+  group_by(Year) %>%
+  mutate(gi_star = local_gstar_perm(
+    GDPPC, nb, wt, nsim = 99)) %>%
+  tidyr::unnest(gi_star)
+```
