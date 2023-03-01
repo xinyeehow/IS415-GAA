@@ -267,8 +267,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a>
   <ul class="collapse">
   <li><a href="#installing-packages" id="toc-installing-packages" class="nav-link" data-scroll-target="#installing-packages">Installing packages</a></li>
-  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">Importing data</a></li>
+  <li><a href="#importing-and-preparing-data" id="toc-importing-and-preparing-data" class="nav-link" data-scroll-target="#importing-and-preparing-data">Importing and preparing data</a></li>
+  <li><a href="#geospatial" id="toc-geospatial" class="nav-link" data-scroll-target="#geospatial">Geospatial</a></li>
+  <li><a href="#aspatial---vaccination-rates-of-jakarta-from-july-2021-to-june-2022-data-taken-from-every-last-day-of-the-month" id="toc-aspatial---vaccination-rates-of-jakarta-from-july-2021-to-june-2022-data-taken-from-every-last-day-of-the-month" class="nav-link" data-scroll-target="#aspatial---vaccination-rates-of-jakarta-from-july-2021-to-june-2022-data-taken-from-every-last-day-of-the-month">Aspatial - Vaccination rates of Jakarta from July 2021 to June 2022 (data taken from every last day of the month)</a></li>
   </ul></li>
+  <li><a href="#plotting-chloropleth-maps" id="toc-plotting-chloropleth-maps" class="nav-link" data-scroll-target="#plotting-chloropleth-maps">Plotting chloropleth maps</a></li>
+  <li><a href="#local-gi-analysis" id="toc-local-gi-analysis" class="nav-link" data-scroll-target="#local-gi-analysis">Local Gi Analysis</a>
+  <ul class="collapse">
+  <li><a href="#computing-hot-spot-and-cold-spot-area-analysis" id="toc-computing-hot-spot-and-cold-spot-area-analysis" class="nav-link" data-scroll-target="#computing-hot-spot-and-cold-spot-area-analysis">Computing Hot Spot and Cold Spot Area Analysis</a></li>
+  </ul></li>
+  <li><a href="#emerging-hot-spot-analysis" id="toc-emerging-hot-spot-analysis" class="nav-link" data-scroll-target="#emerging-hot-spot-analysis">Emerging Hot Spot Analysis</a></li>
+  <li><a href="#performing-mann-kendall-test" id="toc-performing-mann-kendall-test" class="nav-link" data-scroll-target="#performing-mann-kendall-test">Performing <strong>Mann-Kendall Test</strong></a></li>
+  <li><a href="#emerging-hot-spot-analysis-general" id="toc-emerging-hot-spot-analysis-general" class="nav-link" data-scroll-target="#emerging-hot-spot-analysis-general">Emerging Hot Spot Analysis (General)</a></li>
   </ul>
 </nav>
     </div>
@@ -301,7 +311,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 20, 2023</p>
+      <p class="date-modified">March 2, 2023</p>
     </div>
   </div>
     
@@ -315,16 +325,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="installing-packages" class="level3">
 <h3 class="anchored" data-anchor-id="installing-packages">Installing packages</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, tmap, sf, spdep, sfdep, readxl) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, tmap, sf, spdep, sfdep, readxl, stringr) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="importing-data" class="level3">
-<h3 class="anchored" data-anchor-id="importing-data">Importing data</h3>
-<p><strong>Geospatial</strong></p>
+<section id="importing-and-preparing-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-and-preparing-data">Importing and preparing data</h3>
+</section>
+<section id="geospatial" class="level3">
+<h3 class="anchored" data-anchor-id="geospatial">Geospatial</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>jakarta <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data"</span>, </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">layer=</span><span class="st">"BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">23845</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">layer=</span><span class="st">"BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA' from data source 
   `C:\xinyeehow\IS415-GAA\Take-Home_Ex\Take-Home_Ex02\data' using driver `ESRI Shapefile'
@@ -335,71 +346,816 @@ Bounding box:  xmin: 106.3831 ymin: -6.370815 xmax: 106.9728 ymax: -5.184322
 Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
-<p><strong>Aspatial - Vaccination rates of Jakarta from July 2021 to June 2022 (data taken from every first day of the month)</strong></p>
+<p>Since we are only concerned about the first 9 rows, we can remove the rest to reduce the number of variables</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>vac_status_july <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/July2021.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>jakarta <span class="ot">&lt;-</span> jakarta <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><strong>Setting the correct projection</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>vac_status_july</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>jakarta <span class="ot">&lt;-</span> jakarta <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="at">crs=</span><span class="dv">23845</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(jakarta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 268 × 21
-   KODE KELURA…¹ WILAY…² KECAM…³ KELUR…⁴ SASARAN BELUM…⁵ JUMLA…⁶ JUMLA…⁷ TOTAL…⁸
-   &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
- 1 &lt;NA&gt;          &lt;NA&gt;    &lt;NA&gt;    TOTAL   7739060 5041111 2696017 1181740 3877757
- 2 3172051003    JAKART… PADEMA… ANCOL     20393   13272    7114    3287   10401
- 3 3173041007    JAKART… TAMBORA ANGKE     25785   16477    9299    3221   12520
- 4 3175041005    JAKART… KRAMAT… BALE K…   25158   18849    6301    2644    8945
- 5 3175031003    JAKART… JATINE… BALI M…    8683    5743    2937    1517    4454
- 6 3175101006    JAKART… CIPAYU… BAMBU …   22768   15407    7357    3985   11342
- 7 3174031002    JAKART… MAMPAN… BANGKA    18930   12503    6421    2704    9125
- 8 3175051002    JAKART… PASAR … BARU      20267   11268    8982    4674   13656
- 9 3175041004    JAKART… KRAMAT… BATU A…   41389   30358   11020    5254   16274
-10 3171071002    JAKART… TANAH … BENDUN…   19008   11502    7499    3566   11065
-# … with 258 more rows, 12 more variables: `LANSIA\r\nDOSIS 1` &lt;dbl&gt;,
-#   `LANSIA\r\nDOSIS 2` &lt;dbl&gt;, `LANSIA TOTAL \r\nVAKSIN DIBERIKAN` &lt;dbl&gt;,
-#   `PELAYAN PUBLIK\r\nDOSIS 1` &lt;dbl&gt;, `PELAYAN PUBLIK\r\nDOSIS 2` &lt;dbl&gt;,
-#   `PELAYAN PUBLIK TOTAL\r\nVAKSIN DIBERIKAN` &lt;dbl&gt;,
-#   `GOTONG ROYONG\r\nDOSIS 1` &lt;dbl&gt;, `GOTONG ROYONG\r\nDOSIS 2` &lt;dbl&gt;,
-#   `GOTONG ROYONG TOTAL\r\nVAKSIN DIBERIKAN` &lt;dbl&gt;,
-#   `TENAGA KESEHATAN\r\nDOSIS 1` &lt;dbl&gt;, `TENAGA KESEHATAN\r\nDOSIS 2` &lt;dbl&gt;, …</code></pre>
+<pre><code>Coordinate Reference System:
+  User input: EPSG:23845 
+  wkt:
+PROJCRS["DGN95 / Indonesia TM-3 zone 54.1",
+    BASEGEOGCRS["DGN95",
+        DATUM["Datum Geodesi Nasional 1995",
+            ELLIPSOID["WGS 84",6378137,298.257223563,
+                LENGTHUNIT["metre",1]]],
+        PRIMEM["Greenwich",0,
+            ANGLEUNIT["degree",0.0174532925199433]],
+        ID["EPSG",4755]],
+    CONVERSION["Indonesia TM-3 zone 54.1",
+        METHOD["Transverse Mercator",
+            ID["EPSG",9807]],
+        PARAMETER["Latitude of natural origin",0,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8801]],
+        PARAMETER["Longitude of natural origin",139.5,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8802]],
+        PARAMETER["Scale factor at natural origin",0.9999,
+            SCALEUNIT["unity",1],
+            ID["EPSG",8805]],
+        PARAMETER["False easting",200000,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8806]],
+        PARAMETER["False northing",1500000,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8807]]],
+    CS[Cartesian,2],
+        AXIS["easting (X)",east,
+            ORDER[1],
+            LENGTHUNIT["metre",1]],
+        AXIS["northing (Y)",north,
+            ORDER[2],
+            LENGTHUNIT["metre",1]],
+    USAGE[
+        SCOPE["Cadastre."],
+        AREA["Indonesia - onshore east of 138°E."],
+        BBOX[-9.19,138,-1.49,141.01]],
+    ID["EPSG",23845]]</code></pre>
 </div>
 </div>
+<p><strong>Removing outer islands of Jakarta (by filtering KAB_KOTA column, removing Kabupaten Kepulauan Seribu)</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"data/July2021.xlsx"</span>,<span class="st">"data/August2021.xlsx"</span>, <span class="st">"data/September2021.xlsx"</span>, <span class="st">"data/October2021.xlsx"</span>, <span class="st">"data/November2021.xlsx"</span>, <span class="st">"data/December2021.xlsx"</span>, <span class="st">"data/January2022.xlsx"</span>, <span class="st">"data/February2022.xlsx"</span>, <span class="st">"data/March2022.xlsx"</span>, <span class="st">"data/April2022.xlsx"</span>, <span class="st">"data/May2022.xlsx"</span>, <span class="st">"data/June2022.xlsx"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"july"</span>, <span class="st">"august"</span>, <span class="st">"september"</span>, <span class="st">"october"</span>, <span class="st">"november"</span>, <span class="st">"december"</span>, <span class="st">"january"</span>, <span class="st">"february"</span>, <span class="st">"march"</span>, <span class="st">"april"</span>, <span class="st">"may"</span>, <span class="st">"june"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#setNames(do.call(rbind,Map(`cbind`, </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#           lapply(files, read.table, sep=""), V4=files)), names)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#result &lt;- list()</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#for (i in seq_along(files)) {</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#  result[names[i]] &lt;- read_excel(path = files[i])</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>jakarta <span class="ot">&lt;-</span> jakarta <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="st">`</span><span class="at">KAB_KOTA</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'JAKARTA BARAT'</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA PUSAT'</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA SELATAN'</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA TIMUR'</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA UTARA'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><strong>Inspecting layer</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#setwd("C:/xinyeehow/IS415-GAA/Take-Home_Ex/Take-Home_Ex02/data")</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#file_list &lt;- list.files(pattern = "*.xlsx")</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#for (i in file_list) {</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  assign(gsub(".xlsx", "", i),read_excel(i))</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>jakarta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 261 features and 9 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -3644275 ymin: 663887.8 xmax: -3606237 ymax: 701380.1
+Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
+First 10 features:
+   OBJECT_ID  KODE_DESA               DESA   KODE    PROVINSI      KAB_KOTA
+1      25477 3173031006          KEAGUNGAN 317303 DKI JAKARTA JAKARTA BARAT
+2      25478 3173031007             GLODOK 317303 DKI JAKARTA JAKARTA BARAT
+3      25397 3171031003      HARAPAN MULIA 317103 DKI JAKARTA JAKARTA PUSAT
+4      25400 3171031006       CEMPAKA BARU 317103 DKI JAKARTA JAKARTA PUSAT
+5      25390 3171021001         PASAR BARU 317102 DKI JAKARTA JAKARTA PUSAT
+6      25391 3171021002       KARANG ANYAR 317102 DKI JAKARTA JAKARTA PUSAT
+7      25394 3171021005 MANGGA DUA SELATAN 317102 DKI JAKARTA JAKARTA PUSAT
+8      25386 3171011003       PETOJO UTARA 317101 DKI JAKARTA JAKARTA PUSAT
+9      25403 3171041001              SENEN 317104 DKI JAKARTA JAKARTA PUSAT
+10     25408 3171041006             BUNGUR 317104 DKI JAKARTA JAKARTA PUSAT
+     KECAMATAN         DESA_KELUR JUMLAH_PEN                       geometry
+1   TAMAN SARI          KEAGUNGAN      21609 MULTIPOLYGON (((-3626874 69...
+2   TAMAN SARI             GLODOK       9069 MULTIPOLYGON (((-3627130 69...
+3    KEMAYORAN      HARAPAN MULIA      29085 MULTIPOLYGON (((-3621251 68...
+4    KEMAYORAN       CEMPAKA BARU      41913 MULTIPOLYGON (((-3620608 69...
+5  SAWAH BESAR         PASAR BARU      15793 MULTIPOLYGON (((-3624097 69...
+6  SAWAH BESAR       KARANG ANYAR      33383 MULTIPOLYGON (((-3624785 69...
+7  SAWAH BESAR MANGGA DUA SELATAN      35906 MULTIPOLYGON (((-3624752 69...
+8       GAMBIR       PETOJO UTARA      21828 MULTIPOLYGON (((-3626121 69...
+9        SENEN              SENEN       8643 MULTIPOLYGON (((-3623189 69...
+10       SENEN             BUNGUR      23001 MULTIPOLYGON (((-3622451 69...</code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#rbindfile_list</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#for (i in file_list) {</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># i &lt;- cbind(i, )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#file_paths &lt;- list.files("C:/xinyeehow/IS415-GAA/Take-Home_Ex/Take-Home_Ex02/data", pattern = ".xlsx$", full.names = TRUE)</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#do.call(rbind, lapply(file_paths, function(x) </span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#    transform(readxl::read_excel(x), date = sub(".xlsx$", "", basename(x)))))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-
-
 </section>
+<section id="aspatial---vaccination-rates-of-jakarta-from-july-2021-to-june-2022-data-taken-from-every-last-day-of-the-month" class="level3">
+<h3 class="anchored" data-anchor-id="aspatial---vaccination-rates-of-jakarta-from-july-2021-to-june-2022-data-taken-from-every-last-day-of-the-month">Aspatial - Vaccination rates of Jakarta from July 2021 to June 2022 (data taken from every last day of the month)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"C:/xinyeehow/IS415-GAA/Take-Home_Ex/Take-Home_Ex02/data"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>files.list <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">pattern=</span><span class="st">'*.xlsx'</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df.list <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">lapply</span>(files.list, read_excel, <span class="at">sheet=</span><span class="st">"Data Kelurahan"</span>), files.list)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df.list, <span class="at">.id =</span> <span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate_at</span>(<span class="st">"id"</span>, str_replace, <span class="st">".xlsx"</span>, <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(df<span class="sc">$</span>id, <span class="at">format=</span><span class="st">"%Y-%m-%d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Filtering data</strong>, excluding unwanted zones (only want Jakarta Barat, Jakarta Pusat, Jakarta Selatan, Jakarta Timur, and Jakarta Utara in Wilayah Kota column)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="st">`</span><span class="at">WILAYAH KOTA</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'JAKARTA BARAT'</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA PUSAT'</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA SELATAN'</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA TIMUR'</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">'JAKARTA UTARA'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Filtering other unwanted columns</strong> (only keeping administrative boundaries locations and total vaccination information</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">11</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Inspecting vaccine information</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3,132 × 11
+   id         KODE KEL…¹ WILAY…² KECAM…³ KELUR…⁴ SASARAN BELUM…⁵ JUMLA…⁶ JUMLA…⁷
+   &lt;date&gt;     &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+ 1 2021-07-31 3172051003 JAKART… PADEMA… ANCOL     23947   12333   11614    4181
+ 2 2021-07-31 3173041007 JAKART… TAMBORA ANGKE     29381   13875   15506    4798
+ 3 2021-07-31 3175041005 JAKART… KRAMAT… BALE K…   29074   18314   10760    3658
+ 4 2021-07-31 3175031003 JAKART… JATINE… BALI M…    9752    5173    4579    2007
+ 5 2021-07-31 3175101006 JAKART… CIPAYU… BAMBU …   26285   13775   12510    5206
+ 6 2021-07-31 3174031002 JAKART… MAMPAN… BANGKA    21566   10443   11123    4010
+ 7 2021-07-31 3175051002 JAKART… PASAR … BARU      23886   10063   13823    6118
+ 8 2021-07-31 3175041004 JAKART… KRAMAT… BATU A…   47898   28848   19050    7261
+ 9 2021-07-31 3171071002 JAKART… TANAH … BENDUN…   21494    9978   11516    4602
+10 2021-07-31 3175031002 JAKART… JATINE… BIDARA…   36689   21784   14905    5490
+# … with 3,122 more rows, 2 more variables: `JUMLAH\r\nDOSIS 3` &lt;dbl&gt;,
+#   `TOTAL VAKSIN\r\nDIBERIKAN` &lt;dbl&gt;, and abbreviated variable names
+#   ¹​`KODE KELURAHAN`, ²​`WILAYAH KOTA`, ³​KECAMATAN, ⁴​KELURAHAN,
+#   ⁵​`BELUM VAKSIN`, ⁶​`JUMLAH\r\nDOSIS 1`, ⁷​`JUMLAH\r\nDOSIS 2`</code></pre>
+</div>
+</div>
+<p><strong>Joining aspatial and geospatial information by common columns</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>jkt_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(jakarta, df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"DESA"</span> <span class="ot">=</span> <span class="st">"KELURAHAN"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Plotting chloropleth map for examination - first dose</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(jkt_df) <span class="sc">+</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"JUMLAH</span><span class="sc">\r\n</span><span class="st">DOSIS 1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can see some missing values (in grey) in the plot generated above.</p>
+<p><strong>Identifying missing values</strong></p>
+<p>Let’s have a glimpse of all the names of the sub-districts first</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(jkt_df<span class="sc">$</span>DESA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "KEAGUNGAN"              "GLODOK"                 "HARAPAN MULIA"         
+  [4] "CEMPAKA BARU"           "PASAR BARU"             "KARANG ANYAR"          
+  [7] "MANGGA DUA SELATAN"     "PETOJO UTARA"           "SENEN"                 
+ [10] "BUNGUR"                 "CEMPAKA PUTIH TIMUR"    "RAWASARI"              
+ [13] "MENTENG"                "CIKINI"                 "PETAMBURAN"            
+ [16] "KEBON MELATI"           "KAMPUNG RAWA"           "TUGU UTARA"            
+ [19] "KAMAL MUARA"            "PLUIT"                  "LAGOA"                 
+ [22] "PAPANGGO"               "SUNGAI BAMBU"           "KEBON BAWANG"          
+ [25] "WARAKAS"                "KOJA"                   "TUGU SELATAN"          
+ [28] "RAWA BADAK SELATAN"     "CILINCING"              "WIJAYA KUSUMA"         
+ [31] "KALIBARU"               "ROROTAN"                "SEMPER BARAT"          
+ [34] "PADEMANGAN TIMUR"       "PADEMANGAN BARAT"       "ANCOL"                 
+ [37] "KELAPA GADING TIMUR"    "CENGKARENG BARAT"       "MANGGA BESAR"          
+ [40] "KAPUK"                  "CENGKARENG TIMUR"       "TANJUNG DUREN UTARA"   
+ [43] "JELAMBAR"               "KRENDANG"               "SUKABUMI UTARA"        
+ [46] "SUKABUMI SELATAN"       "KELAPA DUA"             "DURI KEPA"             
+ [49] "KEDOYA UTARA"           "KEDOYA SELATAN"         "PEGADUNGAN"            
+ [52] "PALMERAH"               "KOTA BAMBU SELATAN"     "RAWA BUNGA"            
+ [55] "KEMBANGAN UTARA"        "MERUYA UTARA"           "SRENGSENG"             
+ [58] "KEBON BARU"             "MANGGARAI SELATAN"      "SETIA BUDI"            
+ [61] "KARET SEMANGGI"         "KARET KUNINGAN"         "MENTENG ATAS"          
+ [64] "PASAR MANGGIS"          "GUNTUR"                 "KUNINGAN TIMUR"        
+ [67] "MAMPANG PRAPATAN"       "BANGKA"                 "RAGUNAN"               
+ [70] "PEJATEN TIMUR"          "PEJATEN BARAT"          "KEBAGUSAN"             
+ [73] "KEBAYORAN LAMA UTARA"   "CIPULIR"                "GROGOL SELATAN"        
+ [76] "SENAYAN"                "PONDOK LABU"            "GANDARIA SELATAN"      
+ [79] "CIPETE SELATAN"         "PULO"                   "GANDARIA UTARA"        
+ [82] "PETUKANGAN SELATAN"     "KALIBATA"               "RAWAJATI"              
+ [85] "LENTENG AGUNG"          "JAGAKARSA"              "CIPEDAK"               
+ [88] "BINTARO"                "PISANGAN BARU"          "KEBON MANGGIS"         
+ [91] "UTAN KAYU SELATAN"      "JATINEGARA KAUM"        "JATI"                  
+ [94] "CIPINANG MUARA"         "CIPINANG BESAR SELATAN" "CIPINANG BESAR UTARA"  
+ [97] "TENGAH"                 "DUKUH"                  "BALEKAMBANG"           
+[100] "CILILITAN"              "KALISARI"               "DUREN SAWIT"           
+[103] "KLENDER"                "PONDOK KOPI"            "PINANGRANTI"           
+[106] "KEBON PALA"             "CIRACAS"                "CIPAYUNG"              
+[109] "KEMAYORAN"              "UTAN PANJANG"           "PISANGAN TIMUR"        
+[112] "RAWA BADAK UTARA"       "TANJUNG DUREN SELATAN"  "JELAMBAR BARU"         
+[115] "KEBON KOSONG"           "SERDANG"                "GUNUNG SAHARI SELATAN" 
+[118] "SUMUR BATU"             "KEBON KELAPA"           "DURI PULO"             
+[121] "KARTINI"                "GUNUNG SAHARI UTARA"    "GAMBIR"                
+[124] "CIDENG"                 "PETOJO SELATAN"         "KENARI"                
+[127] "PASEBAN"                "KRAMAT"                 "KWITANG"               
+[130] "CEMPAKA PUTIH BARAT"    "PEGANGSAAN"             "GONDANGDIA"            
+[133] "KEBON SIRIH"            "GELORA"                 "BENDUNGAN HILIR"       
+[136] "KARET TENGSIN"          "KEBON KACANG"           "KAMPUNG BALI"          
+[139] "JOHAR BARU"             "GALUR"                  "TANAH TINGGI"          
+[142] "PENJARINGAN"            "KAPUK MUARA"            "PEJAGALAN"             
+[145] "TANJUNG PRIOK"          "SUNTER JAYA"            "SUNTER AGUNG"          
+[148] "SUKAPURA"               "MARUNDA"                "SEMPER TIMUR"          
+[151] "TAMAN SARI"             "KRUKUT"                 "PEGANGSAAN DUA"        
+[154] "KELAPA GADING BARAT"    "DURI KOSAMBI"           "RAWA BUAYA"            
+[157] "KEDAUNG KALI ANGKE"     "MAPHAR"                 "TANGKI"                
+[160] "GROGOL"                 "TOMANG"                 "PINANGSIA"             
+[163] "TAMBORA"                "KALI ANYAR"             "DURI UTARA"            
+[166] "TANAH SEREAL"           "JEMBATAN BESI"          "ANGKE"                 
+[169] "JEMBATAN LIMA"          "PEKOJAN"                "ROA MALAKA"            
+[172] "DURI SELATAN"           "CIPINANG"               "KEBON JERUK"           
+[175] "KALIDERES"              "SEMANAN"                "TEGAL ALUR"            
+[178] "KAMAL"                  "SLIPI"                  "KOTA BAMBU UTARA"      
+[181] "JATIPULO"               "KEMANGGISAN"            "MERUYA SELATAN"        
+[184] "TEBET BARAT"            "JOGLO"                  "KEMBANGAN SELATAN"     
+[187] "TEBET TIMUR"            "CIPINANG CEMPEDAK"      "MENTENG DALAM"         
+[190] "BUKIT DURI"             "MANGGARAI"              "KARET"                 
+[193] "JATI PADANG"            "PELA MAMPANG"           "TEGAL PARANG"          
+[196] "KUNINGAN BARAT"         "PASAR MINGGU"           "CILANDAK TIMUR"        
+[199] "PONDOK PINANG"          "GROGOL UTARA"           "KEBAYORAN LAMA SELATAN"
+[202] "CILANDAK BARAT"         "LEBAK BULUS"            "MELAWAI"               
+[205] "GUNUNG"                 "KRAMAT PELA"            "SELONG"                
+[208] "RAWA BARAT"             "PETOGOGAN"              "CIPETE UTARA"          
+[211] "PANCORAN"               "DUREN TIGA"             "PENGADEGAN"            
+[214] "CIKOKO"                 "SRENGSENG SAWAH"        "CIGANJUR"              
+[217] "TANJUNG BARAT"          "PESANGGRAHAN"           "PETUKANGAN UTARA"      
+[220] "PULO GADUNG"            "ULUJAMI"                "UTAN KAYU UTARA"       
+[223] "KAYU MANIS"             "PALMERIAM"              "RAWAMANGUN"            
+[226] "KAYU PUTIH"             "KAMPUNG MELAYU"         "BIDARA CINA"           
+[229] "BALI MESTER"            "KRAMATJATI"             "MAKASAR"               
+[232] "BATU AMPAR"             "CAWANG"                 "GEDONG"                
+[235] "BARU"                   "CIJANTUNG"              "PEKAYON"               
+[238] "JATINEGARA"             "RAWA TERATE"            "PENGGILINGAN"          
+[241] "CAKUNG TIMUR"           "PULO GEBANG"            "UJUNG MENTENG"         
+[244] "CAKUNG BARAT"           "PONDOK BAMBU"           "PONDOK KELAPA"         
+[247] "MALAKA SARI"            "MALAKA JAYA"            "HALIM PERDANA KUSUMA"  
+[250] "CIPINANG MELAYU"        "CIBUBUR"                "KELAPA DUA WETAN"      
+[253] "SUSUKAN"                "RAMBUTAN"               "CILANGKAP"             
+[256] "PONDOK RANGGON"         "MUNJUL"                 "SETU"                  
+[259] "BAMBU APUS"             "LUBANG BUAYA"           "CEGER"                 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_unique <span class="ot">&lt;-</span> <span class="fu">unique</span>(df<span class="sc">$</span>KELURAHAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>jakarta_unique <span class="ot">&lt;-</span> <span class="fu">unique</span>(jakarta<span class="sc">$</span>DESA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Identifying problematic names</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(df_unique[<span class="sc">!</span>(df_unique <span class="sc">%in%</span> jakarta_unique)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "BALE KAMBANG"          "HALIM PERDANA KUSUMAH" "JATI PULO"            
+[4] "KAMPUNG TENGAH"        "KERENDANG"             "KRAMAT JATI"          
+[7] "PAL MERIAM"            "PINANG RANTI"          "RAWA JATI"            </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>(jakarta_unique[<span class="sc">!</span>(jakarta_unique <span class="sc">%in%</span> df_unique)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "KRENDANG"             "RAWAJATI"             "TENGAH"              
+[4] "BALEKAMBANG"          "PINANGRANTI"          "JATIPULO"            
+[7] "PALMERIAM"            "KRAMATJATI"           "HALIM PERDANA KUSUMA"</code></pre>
+</div>
+</div>
+<p><strong>Fixing problematic names</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"KERENDANG"</span>] <span class="ot">&lt;-</span> <span class="st">"KRENDANG"</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"RAWA JATI"</span>] <span class="ot">&lt;-</span> <span class="st">"RAWAJATI"</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"KAMPUNG TENGAH"</span>] <span class="ot">&lt;-</span> <span class="st">"TENGAH"</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"BALE KAMBANG"</span>] <span class="ot">&lt;-</span> <span class="st">"BALEKAMBANG"</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"PINANG RANTI"</span>] <span class="ot">&lt;-</span> <span class="st">"PINANGRANTI"</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"JATI PULO"</span>] <span class="ot">&lt;-</span> <span class="st">"JATIPULO"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"PAL MERIAM"</span>] <span class="ot">&lt;-</span> <span class="st">"PALMERIAM"</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"KRAMAT JATI"</span>] <span class="ot">&lt;-</span> <span class="st">"KRAMATJATI"</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"HALIM PERDANA KUSUMAH"</span>] <span class="ot">&lt;-</span> <span class="st">"HALIM PERDANA KUSUMA"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Checking map again for confirmation</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>jkt_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(jakarta, df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"DESA"</span> <span class="ot">=</span> <span class="st">"KELURAHAN"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(jkt_df) <span class="sc">+</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"JUMLAH</span><span class="sc">\r\n</span><span class="st">DOSIS 1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now, we can calculate the rates of first, second and third dose rates for Jakarta. We can do so by adding all of the first dose (in all 12 months from July 2021 to June 2022) and dividing by the target vaccinated population of Jakarta to find out how far Jakarta is from the target.</p>
+<p><strong>First dose:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>first_dose <span class="ot">&lt;-</span> jkt_df <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(DESA, id) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">1st Dose</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">JUMLAH</span><span class="sc">\r\n</span><span class="at">DOSIS 1</span><span class="st">`</span>) <span class="sc">/</span> SASARAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Second dose:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>second_dose <span class="ot">&lt;-</span> jkt_df <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(DESA, id) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">2nd Dose</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">JUMLAH</span><span class="sc">\r\n</span><span class="at">DOSIS 2</span><span class="st">`</span>) <span class="sc">/</span> SASARAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Third dose:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>third_dose <span class="ot">&lt;-</span> jkt_df <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(DESA, id) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">3rd Dose</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">JUMLAH</span><span class="sc">\r\n</span><span class="at">DOSIS 3</span><span class="st">`</span>) <span class="sc">/</span> SASARAN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="plotting-chloropleth-maps" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-chloropleth-maps">Plotting chloropleth maps</h2>
+<p><strong>First dose:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(first_dose) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_polygons</span>(<span class="st">"1st Dose"</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">palette =</span> <span class="st">"Blues"</span>) <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_facets</span>(<span class="at">by =</span> <span class="st">"id"</span>) <span class="sc">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Second dose:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(second_dose) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_polygons</span>(<span class="st">"2nd Dose"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">palette =</span> <span class="st">"Blues"</span>) <span class="sc">+</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_facets</span>(<span class="at">by =</span> <span class="st">"id"</span>) <span class="sc">+</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Third dose:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(third_dose) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_polygons</span>(<span class="st">"3rd Dose"</span>,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">palette =</span> <span class="st">"Blues"</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_facets</span>(<span class="at">by =</span> <span class="st">"id"</span>) <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="local-gi-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="local-gi-analysis">Local Gi Analysis</h2>
+<p>Filtering out 1 month’s data (we will use the most recent data - June 2022)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>vaccine <span class="ot">&lt;-</span> first_dose <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(second_dose<span class="sc">$</span><span class="st">`</span><span class="at">2nd Dose</span><span class="st">`</span>, third_dose<span class="sc">$</span><span class="st">`</span><span class="at">3rd Dose</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>june <span class="ot">&lt;-</span> vaccine[vaccine<span class="sc">$</span>id <span class="sc">==</span> <span class="st">"2022-06-30.xlsx"</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Setting seed - for reproducibility</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Deriving contiguity weights - Queen’s method</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> june <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">style =</span> <span class="st">"W"</span>),</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>wm_q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 261 features and 7 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -3644275 ymin: 663887.8 xmax: -3606237 ymax: 701380.1
+Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
+First 10 features:
+                                            nb
+12  68, 150, 162, 163, 167, 183, 192, 216, 235
+24                             78, 79, 80, 175
+36                              8, 32, 58, 177
+48              10, 41, 91, 113, 165, 193, 211
+60                            17, 34, 144, 226
+72           30, 36, 37, 48, 85, 176, 180, 202
+84                            26, 87, 143, 243
+96                         3, 32, 58, 135, 251
+108                  59, 98, 99, 114, 185, 222
+120                4, 12, 16, 41, 91, 107, 211
+                                                                                                   wt
+12  0.1111111, 0.1111111, 0.1111111, 0.1111111, 0.1111111, 0.1111111, 0.1111111, 0.1111111, 0.1111111
+24                                                                             0.25, 0.25, 0.25, 0.25
+36                                                                             0.25, 0.25, 0.25, 0.25
+48                        0.1428571, 0.1428571, 0.1428571, 0.1428571, 0.1428571, 0.1428571, 0.1428571
+60                                                                             0.25, 0.25, 0.25, 0.25
+72                                             0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125
+84                                                                             0.25, 0.25, 0.25, 0.25
+96                                                                            0.2, 0.2, 0.2, 0.2, 0.2
+108                                  0.1666667, 0.1666667, 0.1666667, 0.1666667, 0.1666667, 0.1666667
+120                       0.1428571, 0.1428571, 0.1428571, 0.1428571, 0.1428571, 0.1428571, 0.1428571
+               DESA         id X1st.Dose second_dose..2nd.Dose.
+12            ANCOL 2022-06-30 0.8161774              0.7143275
+24            ANGKE 2022-06-30 0.8284265              0.7219972
+36      BALEKAMBANG 2022-06-30 0.8062874              0.7022082
+48      BALI MESTER 2022-06-30 0.8383921              0.7615874
+60       BAMBU APUS 2022-06-30 0.8557733              0.7823093
+72           BANGKA 2022-06-30 0.8248168              0.7429751
+84             BARU 2022-06-30 0.8697982              0.8021854
+96       BATU AMPAR 2022-06-30 0.8138336              0.7182972
+108 BENDUNGAN HILIR 2022-06-30 0.8334419              0.7619801
+120     BIDARA CINA 2022-06-30 0.8072719              0.7198888
+    third_dose..3rd.Dose.                       geometry
+12              0.3077212 MULTIPOLYGON (((-3621016 69...
+24              0.3432831 MULTIPOLYGON (((-3628922 69...
+36              0.2544542 MULTIPOLYGON (((-3620179 67...
+48              0.3693601 MULTIPOLYGON (((-3620268 68...
+60              0.3496291 MULTIPOLYGON (((-3612584 67...
+72              0.2860985 MULTIPOLYGON (((-3626607 67...
+84              0.4214603 MULTIPOLYGON (((-3621054 67...
+96              0.2866926 MULTIPOLYGON (((-3618791 67...
+108             0.3923886 MULTIPOLYGON (((-3627088 68...
+120             0.3007713 MULTIPOLYGON (((-3619635 68...</code></pre>
+</div>
+</div>
+<p>Computing local Gi statistics</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>wm_idw <span class="ot">&lt;-</span> june <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">wts =</span> <span class="fu">st_inverse_distance</span>(nb, geometry,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">scale =</span> <span class="dv">1</span>,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">alpha =</span> <span class="dv">1</span>),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="computing-hot-spot-and-cold-spot-area-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="computing-hot-spot-and-cold-spot-area-analysis">Computing Hot Spot and Cold Spot Area Analysis</h3>
+<p><strong>First Dose</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>HCSA_1st <span class="ot">&lt;-</span> wm_idw <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">local_Gi =</span> <span class="fu">local_gstar_perm</span>(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">X1st.Dose</span><span class="st">`</span>, nb, wt, <span class="at">nsim =</span> <span class="dv">99</span>),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(local_Gi)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>HCSA_1st</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 261 features and 15 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -3644275 ymin: 663887.8 xmax: -3606237 ymax: 701380.1
+Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
+# A tibble: 261 × 16
+   gi_star    e_gi   var_gi   p_value p_sim p_fold…¹ skewn…² kurto…³ nb    wts  
+     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;nb&gt;  &lt;lis&gt;
+ 1 -0.131  0.00383 5.56e-10 0.896      0.88     0.44  -0.122  0.342  &lt;int&gt; &lt;dbl&gt;
+ 2 -1.04   0.00382 9.09e-10 0.297      0.32     0.16  -0.226  0.158  &lt;int&gt; &lt;dbl&gt;
+ 3 -2.47   0.00383 7.99e-10 0.0136     0.04     0.02  -0.189  0.309  &lt;int&gt; &lt;dbl&gt;
+ 4 -1.65   0.00383 6.65e-10 0.0988     0.14     0.07   0.223  1.21   &lt;int&gt; &lt;dbl&gt;
+ 5  1.30   0.00384 8.08e-10 0.194      0.26     0.13  -0.322  0.460  &lt;int&gt; &lt;dbl&gt;
+ 6  0.0724 0.00383 7.05e-10 0.942      0.96     0.48   0.136  0.0902 &lt;int&gt; &lt;dbl&gt;
+ 7  2.47   0.00383 1.47e- 9 0.0134     0.06     0.03   0.194  0.650  &lt;int&gt; &lt;dbl&gt;
+ 8 -2.46   0.00382 9.67e-10 0.0140     0.02     0.01   0.198 -0.564  &lt;int&gt; &lt;dbl&gt;
+ 9 -4.25   0.00383 7.94e-10 0.0000215  0.02     0.01   0.195  0.258  &lt;int&gt; &lt;dbl&gt;
+10 -1.97   0.00384 7.00e-10 0.0487     0.08     0.04  -0.195 -0.251  &lt;int&gt; &lt;dbl&gt;
+# … with 251 more rows, 6 more variables: DESA &lt;chr&gt;, id &lt;date&gt;,
+#   X1st.Dose &lt;dbl&gt;, second_dose..2nd.Dose. &lt;dbl&gt;, third_dose..3rd.Dose. &lt;dbl&gt;,
+#   geometry &lt;MULTIPOLYGON [m]&gt;, and abbreviated variable names ¹​p_folded_sim,
+#   ²​skewness, ³​kurtosis</code></pre>
+</div>
+</div>
+<p><strong>Visualising first dose, setting the significance level (i.e.&nbsp;p-values less than 0.05) hot spot and cold spot areas</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>HCSA_1st_sig <span class="ot">&lt;-</span> HCSA_1st  <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p_sim <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(HCSA_1st) <span class="sc">+</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(HCSA_1st_sig) <span class="sc">+</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Second Dose</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>HCSA_2nd <span class="ot">&lt;-</span> wm_idw <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">local_Gi =</span> <span class="fu">local_gstar_perm</span>(</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">second_dose..2nd.Dose.</span><span class="st">`</span>, nb, wt, <span class="at">nsim =</span> <span class="dv">99</span>),</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(local_Gi)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>HCSA_2nd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 261 features and 15 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -3644275 ymin: 663887.8 xmax: -3606237 ymax: 701380.1
+Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
+# A tibble: 261 × 16
+   gi_star    e_gi      var_gi p_value p_sim p_fol…¹ skewn…² kurto…³ nb    wts  
+     &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;nb&gt;  &lt;lis&gt;
+ 1   0.157 0.00383     2.72e-9  0.875   0.82    0.41 -0.306  -0.297  &lt;int&gt; &lt;dbl&gt;
+ 2  -1.07  0.00382     6.39e-9  0.283   0.38    0.19 -0.160  -0.289  &lt;int&gt; &lt;dbl&gt;
+ 3  -1.61  0.00382     5.41e-9  0.108   0.14    0.07  0.0544  0.397  &lt;int&gt; &lt;dbl&gt;
+ 4  -1.44  0.00383     4.36e-9  0.150   0.2     0.1  -0.487   0.787  &lt;int&gt; &lt;dbl&gt;
+ 5   0.740 0.00383     6.29e-9  0.459   0.44    0.22  0.0373 -0.0685 &lt;int&gt; &lt;dbl&gt;
+ 6   1.22  0.00384     2.71e-9  0.221   0.24    0.12 -0.137  -0.404  &lt;int&gt; &lt;dbl&gt;
+ 7   1.41  0.00385     6.05e-9  0.158   0.18    0.09 -0.107   0.800  &lt;int&gt; &lt;dbl&gt;
+ 8  -2.39  0.00384     4.73e-9  0.0168  0.04    0.02 -0.0125  0.219  &lt;int&gt; &lt;dbl&gt;
+ 9  -2.15  0.00383     3.50e-9  0.0313  0.04    0.02  0.166  -0.198  &lt;int&gt; &lt;dbl&gt;
+10  -1.38  0.00383     3.36e-9  0.168   0.22    0.11 -0.317   0.126  &lt;int&gt; &lt;dbl&gt;
+# … with 251 more rows, 6 more variables: DESA &lt;chr&gt;, id &lt;date&gt;,
+#   X1st.Dose &lt;dbl&gt;, second_dose..2nd.Dose. &lt;dbl&gt;, third_dose..3rd.Dose. &lt;dbl&gt;,
+#   geometry &lt;MULTIPOLYGON [m]&gt;, and abbreviated variable names ¹​p_folded_sim,
+#   ²​skewness, ³​kurtosis</code></pre>
+</div>
+</div>
+<p><strong>Visualising second dose, setting the significance level (i.e.&nbsp;p-values less than 0.05) hot spot and cold spot areas</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>HCSA_2nd_sig <span class="ot">&lt;-</span> HCSA_2nd  <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p_sim <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(HCSA_2nd) <span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(HCSA_2nd_sig) <span class="sc">+</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Third Dose</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>HCSA_3rd <span class="ot">&lt;-</span> wm_idw <span class="sc">%&gt;%</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">local_Gi =</span> <span class="fu">local_gstar_perm</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">third_dose..3rd.Dose.</span><span class="st">`</span>, nb, wt, <span class="at">nsim =</span> <span class="dv">99</span>),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(local_Gi)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>HCSA_3rd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 261 features and 15 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -3644275 ymin: 663887.8 xmax: -3606237 ymax: 701380.1
+Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
+# A tibble: 261 × 16
+   gi_star    e_gi     var_gi p_value p_sim p_fol…¹ skewn…² kurtosis nb    wts  
+     &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;nb&gt;  &lt;lis&gt;
+ 1  1.33   0.00382    5.50e-8  0.184   0.22    0.11  0.306  -0.653   &lt;int&gt; &lt;dbl&gt;
+ 2  0.611  0.00380    1.22e-7  0.541   0.54    0.27  0.0138 -0.206   &lt;int&gt; &lt;dbl&gt;
+ 3 -1.56   0.00378    1.03e-7  0.118   0.12    0.06  0.451   0.697   &lt;int&gt; &lt;dbl&gt;
+ 4 -1.75   0.00385    6.05e-8  0.0798  0.04    0.02  0.0556 -0.191   &lt;int&gt; &lt;dbl&gt;
+ 5 -0.219  0.00383    1.18e-7  0.827   1       0.5   0.617   0.950   &lt;int&gt; &lt;dbl&gt;
+ 6  0.140  0.00383    6.37e-8  0.889   0.9     0.45  0.266  -0.346   &lt;int&gt; &lt;dbl&gt;
+ 7  0.0967 0.00385    9.43e-8  0.923   0.96    0.48  0.550  -0.269   &lt;int&gt; &lt;dbl&gt;
+ 8 -1.88   0.00384    8.51e-8  0.0606  0.1     0.05 -0.0439 -0.213   &lt;int&gt; &lt;dbl&gt;
+ 9 -0.423  0.00384    7.52e-8  0.672   0.82    0.41  0.375  -0.299   &lt;int&gt; &lt;dbl&gt;
+10 -1.83   0.00378    5.57e-8  0.0671  0.06    0.03  0.283   0.00120 &lt;int&gt; &lt;dbl&gt;
+# … with 251 more rows, 6 more variables: DESA &lt;chr&gt;, id &lt;date&gt;,
+#   X1st.Dose &lt;dbl&gt;, second_dose..2nd.Dose. &lt;dbl&gt;, third_dose..3rd.Dose. &lt;dbl&gt;,
+#   geometry &lt;MULTIPOLYGON [m]&gt;, and abbreviated variable names ¹​p_folded_sim,
+#   ²​skewness</code></pre>
+</div>
+</div>
+<p><strong>Visualising third dose, setting the significance level (i.e.&nbsp;p-values less than 0.05) hot spot and cold spot areas</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>HCSA_3rd_sig <span class="ot">&lt;-</span> HCSA_3rd  <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p_sim <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(HCSA_3rd) <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(HCSA_3rd_sig) <span class="sc">+</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"gi_star"</span>) <span class="sc">+</span> </span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Analysis</p>
+</section>
+</section>
+<section id="emerging-hot-spot-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="emerging-hot-spot-analysis">Emerging Hot Spot Analysis</h2>
+<p>Time Series Cube</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>vaccine_st <span class="ot">&lt;-</span> vaccine <span class="sc">%&gt;%</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_spacetime</span>(<span class="at">.loc_col=</span><span class="st">"DESA"</span>, <span class="at">.time_col=</span><span class="st">"id"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Computing spatial weights using Queen’s method</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>vaccine_nb <span class="ot">&lt;-</span> vaccine_st <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(<span class="st">"geometry"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">include_self</span>(<span class="fu">st_contiguity</span>(geometry)),</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_inverse_distance</span>(nb, geometry,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">scale =</span> <span class="dv">1</span>,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">alpha =</span> <span class="dv">1</span>),</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_wts</span>(<span class="st">"wt"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_nbs</span>(<span class="st">"nb"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Computing Gi values of First Dose (Most taken dose)</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>gi_stars_EHSA <span class="ot">&lt;-</span> vaccine_nb <span class="sc">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">`</span><span class="at">id</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gi_star =</span> <span class="fu">local_gstar_perm</span>(</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">X1st.Dose</span><span class="st">`</span>, nb, wt, <span class="at">nsim =</span> <span class="dv">99</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(gi_star)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>gi_stars_EHSA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3,132 × 15
+# Groups:   id [12]
+   DESA   id         X1st.…¹ secon…² third…³ wt    nb    gi_star    e_gi  var_gi
+   &lt;chr&gt;  &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lis&gt; &lt;lis&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+ 1 ANCOL  2021-07-31   0.485   0.175      NA &lt;dbl&gt; &lt;int&gt;   2.02  0.00385 1.14e-8
+ 2 ANGKE  2021-07-31   0.528   0.163      NA &lt;dbl&gt; &lt;int&gt;  -0.724 0.00381 2.41e-8
+ 3 BALEK… 2021-07-31   0.370   0.126      NA &lt;dbl&gt; &lt;int&gt;  -4.69  0.00382 2.02e-8
+ 4 BALI … 2021-07-31   0.470   0.206      NA &lt;dbl&gt; &lt;int&gt;  -3.53  0.00384 1.52e-8
+ 5 BAMBU… 2021-07-31   0.476   0.198      NA &lt;dbl&gt; &lt;int&gt;  -1.11  0.00383 2.74e-8
+ 6 BANGKA 2021-07-31   0.516   0.186      NA &lt;dbl&gt; &lt;int&gt;   0.812 0.00384 1.71e-8
+ 7 BARU   2021-07-31   0.579   0.256      NA &lt;dbl&gt; &lt;int&gt;   0.851 0.00384 2.35e-8
+ 8 BATU … 2021-07-31   0.398   0.152      NA &lt;dbl&gt; &lt;int&gt;  -4.36  0.00383 2.23e-8
+ 9 BENDU… 2021-07-31   0.536   0.214      NA &lt;dbl&gt; &lt;int&gt;  -0.962 0.00383 1.66e-8
+10 BIDAR… 2021-07-31   0.406   0.150      NA &lt;dbl&gt; &lt;int&gt;  -3.46  0.00381 1.68e-8
+# … with 3,122 more rows, 5 more variables: p_value &lt;dbl&gt;, p_sim &lt;dbl&gt;,
+#   p_folded_sim &lt;dbl&gt;, skewness &lt;dbl&gt;, kurtosis &lt;dbl&gt;, and abbreviated
+#   variable names ¹​X1st.Dose, ²​second_dose..2nd.Dose., ³​third_dose..3rd.Dose.</code></pre>
+</div>
+</div>
+</section>
+<section id="performing-mann-kendall-test" class="level2">
+<h2 class="anchored" data-anchor-id="performing-mann-kendall-test">Performing <strong>Mann-Kendall Test</strong></h2>
+<p><strong>Selecting 3 sub-districts to perform test</strong></p>
+<p>Highest first dose rate</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>vaccine <span class="sc">%&gt;%</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">5</span>, <span class="st">`</span><span class="at">X1st.Dose</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">X1st.Dose</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(DESA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "HALIM PERDANA KUSUMA" "HALIM PERDANA KUSUMA" "HALIM PERDANA KUSUMA"
+[4] "HALIM PERDANA KUSUMA" "HALIM PERDANA KUSUMA"</code></pre>
+</div>
+</div>
+<p>Lowest first dose rate</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>vaccine <span class="sc">%&gt;%</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="st">`</span><span class="at">X1st.Dose</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="st">`</span><span class="at">X1st.Dose</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>(DESA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "BALEKAMBANG"  "PETAMBURAN"   "KEBON MELATI" "BATU AMPAR"   "TENGAH"      </code></pre>
+</div>
+</div>
+<p>Middle first dose rate</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>vaccine_ordered <span class="ot">&lt;-</span> vaccine <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="st">`</span><span class="at">X1st.Dose</span><span class="st">`</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>vaccine_ordered<span class="sc">$</span>DESA[<span class="dv">1566</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ROA MALAKA"</code></pre>
+</div>
+</div>
+<p><strong>Computing Mann-Kendall Test</strong></p>
+<p><u>Highest first dose rate: HALIM PERDANA KUSUMA</u></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>cbg_hpk_EHSA <span class="ot">&lt;-</span> gi_stars_EHSA <span class="sc">%&gt;%</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DESA <span class="sc">==</span> <span class="st">"HALIM PERDANA KUSUMA"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(DESA, id, gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cbg_hpk_EHSA, </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> id, </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> gi_star)) <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>cbg_hpk_EHSA <span class="sc">%&gt;%</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mk =</span> <span class="fu">list</span>(</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unclass</span>(</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>      Kendall<span class="sc">::</span><span class="fu">MannKendall</span>(gi_star)))) <span class="sc">%&gt;%</span> </span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_wider</span>(mk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+    tau     sl     S     D  varS
+  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 0.455 0.0467    30  66.0  213.</code></pre>
+</div>
+</div>
+<p>The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend.</p>
+<p><u>Middle first dose rate: ROA MALAKA</u></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>cbg_rm_EHSA <span class="ot">&lt;-</span> gi_stars_EHSA <span class="sc">%&gt;%</span> </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DESA <span class="sc">==</span> <span class="st">"ROA MALAKA"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(DESA, id, gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cbg_rm_EHSA, </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> id, </span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> gi_star)) <span class="sc">+</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>cbg_rm_EHSA <span class="sc">%&gt;%</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mk =</span> <span class="fu">list</span>(</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unclass</span>(</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>      Kendall<span class="sc">::</span><span class="fu">MannKendall</span>(gi_star)))) <span class="sc">%&gt;%</span> </span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_wider</span>(mk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+     tau     sl     S     D  varS
+   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 -0.394 0.0865   -26  66.0  213.</code></pre>
+</div>
+</div>
+<p>The graph above showed a accelerated decrease in first dose rates being administered on the residents of ROA MALAKA sub-district. This may be due to the fact that most of the residents in MOA MALAKA have gone for their vaccination as soon as they were launched and were very compliant with combating COVID-19.</p>
+<p><u>Middle first dose rate: BALEKAMBANG</u></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>cbg_bkb_EHSA <span class="ot">&lt;-</span> gi_stars_EHSA <span class="sc">%&gt;%</span> </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DESA <span class="sc">==</span> <span class="st">"BALEKAMBANG"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(DESA, id, gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cbg_bkb_EHSA, </span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> id, </span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> gi_star)) <span class="sc">+</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>cbg_bkb_EHSA <span class="sc">%&gt;%</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mk =</span> <span class="fu">list</span>(</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unclass</span>(</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>      Kendall<span class="sc">::</span><span class="fu">MannKendall</span>(gi_star)))) <span class="sc">%&gt;%</span> </span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_wider</span>(mk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 5
+    tau     sl     S     D  varS
+  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 0.576 0.0112    38  66.0  213.</code></pre>
+</div>
+</div>
+<p>The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend.</p>
+</section>
+<section id="emerging-hot-spot-analysis-general" class="level2">
+<h2 class="anchored" data-anchor-id="emerging-hot-spot-analysis-general">Emerging Hot Spot Analysis (General)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>EHSA <span class="ot">&lt;-</span> <span class="fu">emerging_hotspot_analysis</span>(</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> vaccine_st, </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.var =</span> <span class="st">"X1st.Dose"</span>, </span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k =</span> <span class="dv">1</span>, </span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nsim =</span> <span class="dv">99</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Visualising emerging hot spot analysis</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> EHSA,</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> classification)) <span class="sc">+</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Visualising geographically</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>jakarta_EHSA <span class="ot">&lt;-</span> jakarta <span class="sc">%&gt;%</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(EHSA,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"DESA"</span> <span class="ot">=</span> <span class="st">"location"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="st">`</span><span class="at">p_value</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">replace</span>(<span class="st">`</span><span class="at">p_value</span><span class="st">`</span>, <span class="st">`</span><span class="at">p_value</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="fl">0.05</span>, <span class="cn">NA</span>),</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>          <span class="st">`</span><span class="at">classification</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">p_value</span><span class="st">`</span>), <span class="cn">NA</span>, <span class="st">`</span><span class="at">classification</span><span class="st">`</span>))</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(jakarta_EHSA) <span class="sc">+</span></span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"classification"</span>) <span class="sc">+</span></span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Analysis</strong></p>
+<p>hello</p>
+<p>Reference</p>
+<p>With guidance from Prof Kam Tin Seong, and senior Megan Sim Tze Yen</p>
+
+
 </section>
 
 </main> <!-- /main -->
