@@ -278,7 +278,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#emerging-hot-spot-analysis" id="toc-emerging-hot-spot-analysis" class="nav-link" data-scroll-target="#emerging-hot-spot-analysis">Emerging Hot Spot Analysis</a></li>
   <li><a href="#performing-mann-kendall-test" id="toc-performing-mann-kendall-test" class="nav-link" data-scroll-target="#performing-mann-kendall-test">Performing <strong>Mann-Kendall Test</strong></a></li>
-  <li><a href="#emerging-hot-spot-analysis-general" id="toc-emerging-hot-spot-analysis-general" class="nav-link" data-scroll-target="#emerging-hot-spot-analysis-general">Emerging Hot Spot Analysis (General)</a></li>
+  <li><a href="#emerging-hot-spot-analysis-general---first-dose" id="toc-emerging-hot-spot-analysis-general---first-dose" class="nav-link" data-scroll-target="#emerging-hot-spot-analysis-general---first-dose">Emerging Hot Spot Analysis (General - First Dose)</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -633,7 +634,7 @@ First 10 features:
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"KRAMAT JATI"</span>] <span class="ot">&lt;-</span> <span class="st">"KRAMATJATI"</span></span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>KELURAHAN[df<span class="sc">$</span>KELURAHAN <span class="sc">==</span> <span class="st">"HALIM PERDANA KUSUMAH"</span>] <span class="ot">&lt;-</span> <span class="st">"HALIM PERDANA KUSUMA"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Checking map again for confirmation</p>
+<p><strong>Checking map again for confirmation</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>jkt_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(jakarta, df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"DESA"</span> <span class="ot">=</span> <span class="st">"KELURAHAN"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -679,6 +680,8 @@ First 10 features:
 <p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p><u>Analysis:</u></p>
+<p>As we can visualise from the plot above, the percentage of targeted vaccine rates have been increasing from the beginning of the study (July 2021) to the end of the study (June 2022). The south of Jakarta managed to reach the target the quickest, with the north of Jakarta only reaching the targeted vaccine rates completely only in February 2022, 4 months after south Jakarta reached the targeted vaccine rates.</p>
 <p><strong>Second dose:</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
@@ -691,6 +694,8 @@ First 10 features:
 <p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p><u>Analysis:</u></p>
+<p>For the second dose, only a few sub-districts managed to hit the targeted vaccine rates even by the end of our study (June 2022). For the rest of the Jakarta sub-districts, most of them only managed to reach 60-80% of the targeted vaccine rates. It seemed like the progression did not change much after the fifth month of study (November 2021).</p>
 <p><strong>Third dose:</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
@@ -703,10 +708,12 @@ First 10 features:
 <p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p><u>Analysis:</u></p>
+<p>There were no data available for the third dose of vaccine till the ninth month of study (March 2022). For the remaining four months of the study, there seemed to be very little progression to achieve the targeted vaccine rates for all the sub-districts of Jakarta, except for 2 of the sub-districts. For a more detailed analysis of the third dose, a longer study period is required to observe the trend as 4 months is insufficient.</p>
 </section>
 <section id="local-gi-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="local-gi-analysis">Local Gi Analysis</h2>
-<p>Filtering out 1 month’s data (we will use the most recent data - June 2022)</p>
+<p><strong>Filtering out 1 month’s data (we will use the most recent data - June 2022)</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>vaccine <span class="ot">&lt;-</span> first_dose <span class="sc">%&gt;%</span> </span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(second_dose<span class="sc">$</span><span class="st">`</span><span class="at">2nd Dose</span><span class="st">`</span>, third_dose<span class="sc">$</span><span class="st">`</span><span class="at">3rd Dose</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -714,11 +721,11 @@ First 10 features:
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>june <span class="ot">&lt;-</span> vaccine[vaccine<span class="sc">$</span>id <span class="sc">==</span> <span class="st">"2022-06-30.xlsx"</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Setting seed - for reproducibility</p>
+<p><strong>Setting seed - for reproducibility</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Deriving contiguity weights - Queen’s method</p>
+<p><strong>Deriving contiguity weights - Queen’s method</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> june <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
@@ -781,7 +788,7 @@ First 10 features:
 120             0.3007713 MULTIPOLYGON (((-3619635 68...</code></pre>
 </div>
 </div>
-<p>Computing local Gi statistics</p>
+<p><strong>Computing local Gi statistics</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>wm_idw <span class="ot">&lt;-</span> june <span class="sc">%&gt;%</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
@@ -840,6 +847,7 @@ Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
 <p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>This hotspot and coldspot analysis above confirms our conclusion on the first dose of vaccination rates above, that the south of Jakarta is a hotspot and central/north Jakarta are coldspots.</p>
 <p><strong>Second Dose</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>HCSA_2nd <span class="ot">&lt;-</span> wm_idw <span class="sc">%&gt;%</span> </span>
@@ -888,6 +896,7 @@ Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
 <p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>This hotspot and coldspot analysis above further confirms our conclusion on the second dose of vaccination rates above, that the south of Jakarta is a hotspot and central/north Jakarta are coldspots. There seems to be a lot of similarities with the map generated during the first dose analysis.</p>
 <p><strong>Third Dose</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>HCSA_3rd <span class="ot">&lt;-</span> wm_idw <span class="sc">%&gt;%</span> </span>
@@ -936,7 +945,8 @@ Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
 <p><img src="Take-Home_Ex02_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Analysis</p>
+<p><u>Analysis:</u></p>
+<p>For the third dose, the analysis results need to be taken with a pinch of salt, as it was only analysed over a 4-month period. We can conclude that the north of Jakarta still remained as a coldspot for vaccination, and the areas of hotpsot coincides with the higher vaccination rates depicted on the third dose Chloropeth map above.</p>
 </section>
 </section>
 <section id="emerging-hot-spot-analysis" class="level2">
@@ -1051,7 +1061,7 @@ Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
 1 0.455 0.0467    30  66.0  213.</code></pre>
 </div>
 </div>
-<p>The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend.</p>
+<p>The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend for reaching the targeted vaccination rate.</p>
 <p><u>Middle first dose rate: ROA MALAKA</u></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>cbg_rm_EHSA <span class="ot">&lt;-</span> gi_stars_EHSA <span class="sc">%&gt;%</span> </span>
@@ -1113,10 +1123,10 @@ Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
 1 0.576 0.0112    38  66.0  213.</code></pre>
 </div>
 </div>
-<p>The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend.</p>
+<p>The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend for reaching the targeted vaccination rate.</p>
 </section>
-<section id="emerging-hot-spot-analysis-general" class="level2">
-<h2 class="anchored" data-anchor-id="emerging-hot-spot-analysis-general">Emerging Hot Spot Analysis (General)</h2>
+<section id="emerging-hot-spot-analysis-general---first-dose" class="level2">
+<h2 class="anchored" data-anchor-id="emerging-hot-spot-analysis-general---first-dose">Emerging Hot Spot Analysis (General - First Dose)</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>EHSA <span class="ot">&lt;-</span> <span class="fu">emerging_hotspot_analysis</span>(</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> vaccine_st, </span>
@@ -1151,8 +1161,10 @@ Projected CRS: DGN95 / Indonesia TM-3 zone 54.1
 </div>
 </div>
 <p><strong>Analysis</strong></p>
-<p>hello</p>
-<p>Reference</p>
+<p>As we can infer from the map plotted out below, the south of Jakarta accounts for majority of the oscilating hotspots for the first dose of vaccination, correlating to our analysis above. The north of Jakarta also correlates to what we saw above, constituting to most of the oscilating coldspots.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
 <p>With guidance from Prof Kam Tin Seong, and senior Megan Sim Tze Yen</p>
 
 

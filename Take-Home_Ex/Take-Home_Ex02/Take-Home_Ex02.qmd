@@ -152,7 +152,7 @@ df$KELURAHAN[df$KELURAHAN == "KRAMAT JATI"] <- "KRAMATJATI"
 df$KELURAHAN[df$KELURAHAN == "HALIM PERDANA KUSUMAH"] <- "HALIM PERDANA KUSUMA"
 ```
 
-Checking map again for confirmation
+**Checking map again for confirmation**
 
 ```{r}
 jkt_df <- left_join(jakarta, df, by = c("DESA" = "KELURAHAN"))
@@ -202,6 +202,10 @@ tm_shape(first_dose) +
     tm_borders(alpha = 0.5)
 ```
 
+[Analysis:]{.underline}
+
+As we can visualise from the plot above, the percentage of targeted vaccine rates have been increasing from the beginning of the study (July 2021) to the end of the study (June 2022). The south of Jakarta managed to reach the target the quickest, with the north of Jakarta only reaching the targeted vaccine rates completely only in February 2022, 4 months after south Jakarta reached the targeted vaccine rates.
+
 **Second dose:**
 
 ```{r}
@@ -212,6 +216,10 @@ tm_shape(second_dose) +
   tm_facets(by = "id") +
     tm_borders(alpha = 0.5)
 ```
+
+[Analysis:]{.underline}
+
+For the second dose, only a few sub-districts managed to hit the targeted vaccine rates even by the end of our study (June 2022). For the rest of the Jakarta sub-districts, most of them only managed to reach 60-80% of the targeted vaccine rates. It seemed like the progression did not change much after the fifth month of study (November 2021).
 
 **Third dose:**
 
@@ -224,9 +232,13 @@ tm_shape(third_dose) +
     tm_borders(alpha = 0.5)
 ```
 
+[Analysis:]{.underline}
+
+There were no data available for the third dose of vaccine till the ninth month of study (March 2022). For the remaining four months of the study, there seemed to be very little progression to achieve the targeted vaccine rates for all the sub-districts of Jakarta, except for 2 of the sub-districts. For a more detailed analysis of the third dose, a longer study period is required to observe the trend as 4 months is insufficient.
+
 ## Local Gi Analysis
 
-Filtering out 1 month's data (we will use the most recent data - June 2022)
+**Filtering out 1 month's data (we will use the most recent data - June 2022)**
 
 ```{r}
 vaccine <- first_dose %>% 
@@ -237,13 +249,13 @@ vaccine <- first_dose %>%
 june <- vaccine[vaccine$id == "2022-06-30.xlsx",]
 ```
 
-Setting seed - for reproducibility
+**Setting seed - for reproducibility**
 
 ```{r}
 set.seed(9999)
 ```
 
-Deriving contiguity weights - Queen's method
+**Deriving contiguity weights - Queen's method**
 
 ```{r}
 wm_q <- june %>%
@@ -257,7 +269,7 @@ wm_q <- june %>%
 wm_q
 ```
 
-Computing local Gi statistics
+**Computing local Gi statistics**
 
 ```{r}
 wm_idw <- june %>%
@@ -295,6 +307,8 @@ tm_shape(HCSA_1st_sig) +
   tm_borders(alpha = 0.4)
 ```
 
+This hotspot and coldspot analysis above confirms our conclusion on the first dose of vaccination rates above, that the south of Jakarta is a hotspot and central/north Jakarta are coldspots.
+
 **Second Dose**
 
 ```{r}
@@ -319,6 +333,8 @@ tm_shape(HCSA_2nd_sig) +
   tm_fill("gi_star") + 
   tm_borders(alpha = 0.4)
 ```
+
+This hotspot and coldspot analysis above further confirms our conclusion on the second dose of vaccination rates above, that the south of Jakarta is a hotspot and central/north Jakarta are coldspots. There seems to be a lot of similarities with the map generated during the first dose analysis.
 
 **Third Dose**
 
@@ -345,7 +361,9 @@ tm_shape(HCSA_3rd_sig) +
   tm_borders(alpha = 0.4)
 ```
 
-Analysis
+[Analysis:]{.underline}
+
+For the third dose, the analysis results need to be taken with a pinch of salt, as it was only analysed over a 4-month period. We can conclude that the north of Jakarta still remained as a coldspot for vaccination, and the areas of hotpsot coincides with the higher vaccination rates depicted on the third dose Chloropeth map above.
 
 ## Emerging Hot Spot Analysis
 
@@ -438,7 +456,7 @@ cbg_hpk_EHSA %>%
   tidyr::unnest_wider(mk)
 ```
 
-The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend.
+The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend for reaching the targeted vaccination rate.
 
 [Middle first dose rate: ROA MALAKA]{.underline}
 
@@ -492,9 +510,9 @@ cbg_bkb_EHSA %>%
   tidyr::unnest_wider(mk)
 ```
 
-The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend.
+The SL value is the p value, is lower than our 5% significance, indicates that there is a slight upward but insignificant trend for reaching the targeted vaccination rate.
 
-## Emerging Hot Spot Analysis (General)
+## Emerging Hot Spot Analysis (General - First Dose)
 
 ```{r}
 EHSA <- emerging_hotspot_analysis(
@@ -530,9 +548,8 @@ tm_shape(jakarta_EHSA) +
 
 **Analysis**
 
-hello
+As we can infer from the map plotted out below, the south of Jakarta accounts for majority of the oscilating hotspots for the first dose of vaccination, correlating to our analysis above. The north of Jakarta also correlates to what we saw above, constituting to most of the oscilating coldspots.
 
-
-Reference
+## References
 
 With guidance from Prof Kam Tin Seong, and senior Megan Sim Tze Yen
