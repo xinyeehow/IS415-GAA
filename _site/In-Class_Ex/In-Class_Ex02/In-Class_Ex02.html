@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-02-20">
+<meta name="dcterms.date" content="2023-03-06">
 
 <title>IS415-GAA - In-Class Exercise 02</title>
 <style>
@@ -188,6 +188,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="dropdown-item" href="../../In-Class_Ex/In-class_Ex08/In-class_Ex08.qmd">
  <span class="dropdown-text">In-Class Exercise 8</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-class_Ex09/In-class_Ex09.qmd">
+ <span class="dropdown-text">In-Class Exercise 9</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-class_Ex10/In-class_Ex10.qmd">
+ <span class="dropdown-text">In-Class Exercise 10</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-class_Ex11/In-class_Ex11.qmd">
+ <span class="dropdown-text">In-Class Exercise 11</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-class_Ex12/In-class_Ex12.qmd">
+ <span class="dropdown-text">In-Class Exercise 12</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -224,8 +240,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="dropdown-text">Hands-On Exercise 7B</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex08/Hands-On_Ex08.qmd">
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex08/Hands-On_Ex08.html">
  <span class="dropdown-text">Hands-On Exercise 8</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex09/Hands-On_Ex09.qmd">
+ <span class="dropdown-text">Hands-On Exercise 9</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex10/Hands-On_Ex10.qmd">
+ <span class="dropdown-text">Hands-On Exercise 10</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex11/Hands-On_Ex11.qmd">
+ <span class="dropdown-text">Hands-On Exercise 11</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex12/Hands-On_Ex12.qmd">
+ <span class="dropdown-text">Hands-On Exercise 12</span></a>
   </li>  
     </ul>
   </li>
@@ -248,6 +280,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>  
     </ul>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../project.qmd">
+ <span class="menu-text">Geospatial Project</span></a>
+  </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
@@ -290,7 +326,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 20, 2023</p>
+      <p class="date">March 6, 2023</p>
     </div>
   </div>
   
@@ -461,8 +497,10 @@ Geodetic CRS:  WGS 84
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">freq</span>(<span class="at">data=</span>wp_sf,</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">input =</span> <span class="st">"#status_clean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
-"none")` instead.</code></pre>
+<pre><code>Warning: The `&lt;scale&gt;` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+of ggplot2 3.3.4.
+ℹ The deprecated feature was likely used in the funModeling package.
+  Please report the issue at &lt;https://github.com/pablo14/funModeling/issues&gt;.</code></pre>
 </div>
 <div class="cell-output-display">
 <p><img src="In-Class_Ex02_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
@@ -544,6 +582,10 @@ Geodetic CRS:  WGS 84
 <span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"No. of water points"</span>) <span class="sc">+</span> </span>
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"No. of</span><span class="sc">\n</span><span class="st">LGAs"</span>) <span class="sc">+</span></span>
 <span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y=</span><span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="In-Class_Ex02_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
