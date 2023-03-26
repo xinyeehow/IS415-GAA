@@ -1,5 +1,5 @@
 ---
-title: "Take-Home Exercise 03"
+title: "Take-Home Exercise 03: Predicting HDB Public Housing Resale Pricies using Geographically Weighted Methods"
 date: "8 March 2023"
 date-modified: "`r Sys.Date()`"
 author: "Xinyee How"
@@ -11,6 +11,14 @@ execute:
   warning: false
 ---
 
+## Introduction
+
+Housing is an essential component of household wealth worldwide. Buying a housing has always been a major investment for most people. The price of housing is affected by many factors. Some of them are global in nature such as the general economy of a country or inflation rate. Others can be more specific to the properties themselves. These factors can be further divided to structural and locational factors. Structural factors are variables related to the property themselves such as the size, fitting, and tenure of the property. Locational factors are variables related to the neighbourhood of the properties such as proximity to childcare centre, public transport service and shopping centre.
+
+Conventional, housing resale prices predictive models were built by using [**Ordinary Least Square (OLS)**](https://en.wikipedia.org/wiki/Ordinary_least_squares) method. However, this method failed to take into consideration that spatial autocorrelation and spatial heterogeneity exist in geographic data sets such as housing transactions. With the existence of spatial autocorrelation, the OLS estimation of predictive housing resale pricing models could lead to biased, inconsistent, or inefficient results (Anselin 1998). In view of this limitation, **Geographical Weighted Models** were introduced for calibrating predictive model for housing resale prices.
+
+We are now going to predict HDB resale prices at the sub-market level (i.e. HDB 5-room) The predictive models are built using by using conventional OLS method and GWR method, and we will also be comparing the performance of the conventional OLS method versus the geographical weighted methods.
+
 ## Installing packages
 
 ```{r}
@@ -19,24 +27,24 @@ pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep, GWmodel, tmap, tidyverse, gts
 
 ### Importing data
 
-Resale data (aspatial) - obtained from https://data.gov.sg/dataset/resale-flat-prices
+#### Consisting of the **structural factors:**
 
-Consisting of the **structural factors**
+**HDB resale data** (aspatial) - obtained from [here](https://data.gov.sg/dataset/resale-flat-prices)
 
 ```{r}
 resale <- read_csv("data/resale/resale-flat-prices-based-on-registration-date-from-jan-2017-onwards.csv")
 ```
 
-**Locational factors:**
+#### **Locational factors:**
 
-Master Plan Singapore 2019 (geospatial) - Provided by prof Kam
+**Master Plan Singapore 2019** (geospatial) - Provided by Prof Kam
 
 ```{r}
 mpsz = st_read(dsn = "data/mpsz", layer = "MPSZ-2019")
 mpsz <- mpsz %>% st_transform(crs = 3414)
 ```
 
-MRT (geospatial) - obtained from https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/TrainStation.zip
+**MRT Stations** (geospatial) - obtained from [here](https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/TrainStation.zip)
 
 ```{r}
 mrt = st_read(dsn = "data/TrainStation", layer = "RapidTransitSystemStation")
@@ -50,28 +58,28 @@ mrt <- mrt %>%
   st_make_valid()
 ```
 
-Bus stops (geospatial) - obtained from https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/BusStopLocation.zip
+**Bus stops** (geospatial) - obtained from [here](https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/BusStopLocation.zip)
 
 ```{r}
 busstop = st_read(dsn = "data/BusStop", layer = "BusStop")
 busstop <- busstop %>% st_transform(crs = 3414)
 ```
 
-Eldercare (geospatial) - obtained from https://data.gov.sg/dataset/eldercare-services
+**Eldercare** (geospatial) - obtained from [here](https://data.gov.sg/dataset/eldercare-services)
 
 ```{r}
 eldercare = st_read(dsn = "data/eldercare", layer = "ELDERCARE")
 eldercare <- eldercare %>% st_transform(crs = 3414)
 ```
 
-Childcare (geospatial) - obtained from https://data.gov.sg/dataset/child-care-services
+**Childcare** (geospatial) - obtained from [here](https://data.gov.sg/dataset/child-care-services)
 
 ```{r}
 childcare = st_read(dsn = "data/childcare", layer = "ChildcareServices")
 childcare <- childcare %>% st_transform(crs = 3414)
 ```
 
-Primary schools - https://data.gov.sg/dataset/school-directory-and-information, geocoded into shape file
+**Primary schools** - obtained from [here](https://data.gov.sg/dataset/school-directory-and-information), geocoded into shape file
 
 ```{r}
 schools <- st_read(dsn = "data/Education", layer = "education")
@@ -93,7 +101,7 @@ schools_sf <- st_as_sf(schools,
   st_transform(crs = 3414)
 ```
 
-Good primary schools - obtained list of top 10 schools from https://schlah.com/primary-schools, with the factors' weightage included in the list as well
+**Good primary schools** - obtained [list of top 10 primary schools](https://schlah.com/primary-schools) with the factors' weightage included as well
 
 ```{r}
 good_schools <- read_csv("data/Education/Good Schools.csv")
@@ -115,38 +123,38 @@ good_schools_sf <- st_as_sf(good_schools,
   st_transform(crs = 3414)
 ```
 
-Foodcourts/hawkers, Parks, Malls, and Supermarkets data obtained from http://download.geofabrik.de/asia/malaysia-singapore-brunei.html
+**Foodcourts/hawkers, Parks, Malls, and Supermarkets data** obtained and extracted from [here](http://download.geofabrik.de/asia/malaysia-singapore-brunei.html)
 
 ```{r}
 singapore = st_read(dsn = "data/singapore", layer = "Singapore_POIS")
 singapore <- singapore %>% st_transform(crs = 3414)
 ```
 
-Subsetting Foodcourts and hawkers
+Subsetting [foodcourts and hawkers]{.underline}
 
 ```{r}
 foodcourts <- subset(singapore, fclass == "food_court")
 ```
 
-Parks
+[Parks]{.underline}
 
 ```{r}
 parks <- subset(singapore, fclass == "park")
 ```
 
-Shopping malls
+[Shopping malls]{.underline}
 
 ```{r}
 malls <- subset(singapore, fclass == "mall")
 ```
 
-Supermarkets
+[Supermarkets]{.underline}
 
 ```{r}
 supermarkets <- subset(singapore, fclass == "supermarket")
 ```
 
-CBD - Setting the CBD to be at Downtown Core for this analysis' purpose
+**Central Business District** - Setting the CBD to be at Downtown Core for this analysis' purpose
 
 ```{r}
 lat <- 1.287953
@@ -256,7 +264,7 @@ resale_sf <- st_as_sf(resale,
   st_transform(crs = 3414)
 ```
 
-Proximity Distance Calculation
+**Proximity Distance Calculation**
 
 ```{r}
 proximity <- function(df1, df2, varname) {
@@ -283,7 +291,7 @@ resale_sf <-
   proximity(., schools_sf, "PROX_PRISCH")
 ```
 
-Facility count within radius
+**Facility count within radius**
 
 ```{r}
 num_radius <- function(df1, df2, varname, radius) {
@@ -303,7 +311,7 @@ resale_sf <-
   num_radius(., schools_sf, "NUM_PRISCH", 1000)
 ```
 
-Saving dataset
+**Saving dataset**
 
 ```{r}
 #| eval: false
@@ -328,7 +336,7 @@ Bringing in saved layer
 resale_sf = st_read(dsn = "data/resale", layer = "resale_final")
 ```
 
-Converting LEASE info into numeric format from string format
+**Converting LEASE info into numeric format from string format**
 
 ```{r}
 resale_sf$LEASE_Y <- as.numeric(resale_sf$LEASE_Y)
@@ -394,7 +402,7 @@ summary(resale_slr)
 
 R-squared value obtained is less than 0.001, which means the model is not useful in predicting the price of 5-room models.
 
-Best fit line graph
+**Best fit line graph**
 
 ```{r}
 ggplot(data=resale_sf,  
@@ -409,7 +417,7 @@ Now let's build a multiple regression model
 
 ### Multiple regression model
 
-Plotting correlation plot to determine multicollinearity
+**Plotting correlation plot to determine multicollinearity**
 
 ```{r}
 resale_nogeom_sf <- resale_sf %>%
@@ -439,7 +447,7 @@ resale_sf <- resale_sf[ , !(names(resale_sf) %in% drops)]
 
 ### Splitting test and train data
 
-**Setting train data to be 6 months from March 2022 to September 2022**
+**Setting train data to be 6 months from March 2022 to September 2022 to reduce computational time, test data to be from October to December 2022**
 
 ```{r}
 train_data <- resale_sf %>%
@@ -463,7 +471,7 @@ train_data <- read_rds("data/model/train_data.rds")
 test_data <- read_rds("data/model/test_data.rds")
 ```
 
-Non-spatial multiple regression model
+**Non-spatial multiple regression model**
 
 ```{r}
 resale_mlr <- lm(formula = PRICE ~ AREA_SQ + LEASE_Y + stry_rn +
@@ -480,7 +488,7 @@ summary(resale_mlr)
 write_rds(resale_mlr, "data/model/resale_mlr.rds" ) 
 ```
 
-Prediction using OLS method
+**Prediction using OLS method**
 
 ```{r}
 resale_mlr <- lm(formula = PRICE ~ AREA_SQ + LEASE_Y +
@@ -560,7 +568,7 @@ bw_adaptive <- read_rds("data/model/bw_adaptive.rds")
 bw_adaptive
 ```
 
-Calculating GWR adaptive
+**Calculating GWR adaptive**
 
 ```{r}
 #| eval: false
@@ -630,7 +638,7 @@ train_data_nogeom <- read_rds("data/model/train_data_nogeom.rds")
 
 ## Calibrating Random Forest Model
 
-Using ranger package
+**Using ranger package**
 
 ```{r}
 set.seed(1234)
@@ -645,7 +653,7 @@ rf <- ranger(PRICE ~ AREA_SQ + LEASE_Y + stry_rn +
 print(rf)
 ```
 
-Calculating ranger bandwidth
+**Calculating ranger bandwidth**
 
 ```{r}
 #| eval: false
@@ -670,7 +678,7 @@ gwRF_bw <- read_rds("data/model/gwRF_bw.rds")
 
 # **Calibrating Geographical Random Forest Model**
 
-Using SpatialML package
+**Using SpatialML package**
 
 ```{r}
 #| eval: false
@@ -702,7 +710,7 @@ test_data <- cbind(test_data, coords_test) %>%
   st_drop_geometry()
 ```
 
-Predicting with test data
+**Predicting with test data**
 
 ```{r}
 #| eval: false
@@ -715,14 +723,14 @@ gwRF_pred <- predict.grf(gwRF_adaptive,
 GRF_pred <- write_rds(gwRF_pred, "data/model/GRF_pred.rds")
 ```
 
-Converting predicted output into a dataframe
+**Converting predicted output into a dataframe**
 
 ```{r}
 GRF_pred <- read_rds("data/model/GRF_pred.rds")
 GRF_pred_df <- as.data.frame(GRF_pred)
 ```
 
-Appending predicted values into test data
+**Appending predicted values into test data**
 
 ```{r}
 test_data_p <- cbind(test_data, GRF_pred_df)
@@ -761,4 +769,8 @@ ggplot(data = test_data_p,
   geom_point()
 ```
 
-A better predictive model should have the scatter point close to the diagonal line. The scatter plot can be also used to detect if any outliers in the model.
+A better predictive model should have the scatter point close to the diagonal line. In this case, the predictive model seems to be working very well until the \$900,000 mark. The scatter plot also highlighted the presence of outliers in the model, for the points above the \$900,001 mark. This shows that majority of the 5-room HDB units in Singapore are priced below \$900,000 and those looking to purchase 5-room units above \$900,000 should proceed with caution as the price will be above valuation.
+
+### References
+
+With guidance from Prof Kam Tin Seong and senior Megan Sim
